@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development settings
+.env
+
+# Dependency directories
+venv/
+fastapi-env/
+env/
+env.bak/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Type checking
+.pyrightcache/
+mypy_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
