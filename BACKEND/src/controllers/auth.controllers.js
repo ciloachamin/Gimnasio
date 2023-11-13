@@ -4,6 +4,7 @@ import {connectDB} from "../db.js";
 import axios from "axios";
 const url = await connectDB(); // Espera a que connectDB se resuelva y devuelve la URL
 
+
 export const getUsuarios = async (req, res) => {
     try {
       const response = await axios.get(`${url}/owner`);
@@ -56,7 +57,7 @@ async function fetchOwnersAndFilterByEmail(email) {
       const existingUsers = owners.filter((owner) => owner[3] === email);
       return existingUsers;
     } catch (error) {
-      console.error('Error al obtener usurios:', error);
+      console.error('Error al obtener usuarios:', error);
       return [];
     }
   }
@@ -73,17 +74,15 @@ async function fetchMembersAndFilterByEmail(email) {
     }
   }
 export const signin = async (req, res) => {
-  //MODIFICAR PARA QUE BUSQUE EN AMBAS TABLAS solo con un email y contraseña
     const userData = req.body;
-
-  const result = await checkIfUserExists(userData.mem_email)
+  const result = await checkIfUserExists(userData.email)
 
   if (!result) {
     return res.status(400).json({
       message: "El correo no esta registrado",
     });
   }
-  const validPassword = await bcrypt.compare(userData.mem_password, result[0][8]);
+  const validPassword = await bcrypt.compare(userData.password, result[0][8]);
 
   if (!validPassword) {
     return res.status(400).json({
@@ -133,7 +132,7 @@ async function createUser(userData) {
 export const signup = async (req, res, next) => {
     const userData = req.body;
     try {
-        const existingUser =  await checkIfUserExists(userData.mem_email);
+        const existingUser =  await checkIfUserExists(userData.email);
       if (!(existingUser===null)) {
         return res.status(409).json(["Usuario ya existe"]);
       }

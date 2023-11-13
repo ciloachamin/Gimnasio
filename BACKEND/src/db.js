@@ -1,28 +1,25 @@
-import axios from "axios";
-
-let dbClient; // Variable para almacenar el cliente de la base de datos
-
 export const connectDB = async () => {
   try {
-    if (!dbClient) {
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/gimnasio');
+    const response = await fetch('http://127.0.0.1:8000/api/v1/gimnasio', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      if (response.status === 200 && response.data.message === "Bienvenido a la API del gimnasio") {
+    if (response.ok) {
+      const data = await response.json();
+      if (data.message === "Bienvenido a la API del gimnasio") {
         console.log('>>> Conexión a la base de datos exitosa');
-        dbClient = axios.create({
-          baseURL: 'http://127.0.0.1:8000/api/v1/gimnasio',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        return 'http://127.0.0.1:8000/api/v1/gimnasio'; // Devuelve el enlace de la API
       } else {
-        console.error('La API respondió, pero no se recibió el mensaje esperado. Respuesta completa:', response.data);
+        console.error('La API respondió, pero no se recibió el mensaje esperado. Respuesta completa:', data);
       }
+    } else {
+      console.error('Error al conectar a la base de datos:', response.status, response.statusText);
     }
-
-    return dbClient;
   } catch (error) {
-    console.error('Error al conectar a la base de datos:', error);
-    throw error; // Propagar el error para que pueda ser manejado en el lugar apropiado
-  }
+      console.error('Error al conectar a la base de datos:', error);
+    }
+    
 };
