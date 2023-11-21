@@ -1,35 +1,29 @@
 {
-  "name": "flowbite-next-starter",
-  "version": "0.0.0",
-  "homepage": "https://github.com/tulupinc/flowbite-next-starter",
-  "bugs": "https://github.com/tulupinc/flowbite-next-starter/issues",
-  "license": "MIT",
-  "author": "Conner Davis <conner@tulup.io>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tulupinc/flowbite-next-starter.git"
-  },
+  "name": "twitch-frontend-next-auth-api-rest-con-nestjs-main",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
-    "format": "prettier --check --ignore-path .gitignore --write .",
-    "lint": "next lint",
-    "start": "next start"
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
+    "@types/node": "20.5.0",
+    "@types/react": "18.2.20",
+    "@types/react-dom": "18.2.7",
     "flowbite": "^1.5.5",
     "flowbite-react": "^0.3.7",
-    "next": "^13.0.6",
-    "react": "18",
-    "react-dom": "18",
-    "react-icons": "^4.7.1"
+    "next": "13.4.17",
+    "next-auth": "^4.23.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.9.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.12",
-    "@types/react": "18",
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
-    "autoprefixer": "10.4.13",
+    "autoprefixer": "^10.4.13",
     "eslint": "^8.29.0",
     "eslint-config-next": "^13.0.6",
     "eslint-config-prettier": "^8.5.0",
@@ -38,11 +32,11 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-tailwindcss": "^3.7.1",
-    "postcss": "^8.4.19",
+    "postcss": "^8.4.31",
     "prettier": "^2.8.1",
     "prettier-plugin-organize-imports": "^3.2.1",
-    "tailwindcss": "^3.2.4",
-    "typescript": "^4.9.4"
+    "tailwindcss": "^3.3.5",
+    "typescript": "5.1.6"
   },
   "config": {
     "commitizen": {
