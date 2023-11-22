@@ -62,6 +62,7 @@ import {
 import Header from "./components/header";
 import Sidebar from "./components/sidebar";
 import { SidebarProvider } from "./context/SidebarContext";
+import ButtonAuth from "./components/ButtonAuth";
 
 export default function Index(): JSX.Element {
   return (
@@ -99,7 +100,7 @@ function ActualSidebar(): JSX.Element {
           <Sidebar.Item href="#" icon={HiShoppingBag}>
             Products
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiArrowSmRight}>
+          <Sidebar.Item href="/" icon={HiArrowSmRight}>
             Sign In
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={HiTable}>
@@ -107,7 +108,7 @@ function ActualSidebar(): JSX.Element {
           </Sidebar.Item>
         </Sidebar.ItemGroup>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
+          <Sidebar.Item href="/login/page" icon={HiChartPie}>
             Upgrade to Pro
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={HiViewBoards}>
@@ -331,6 +332,7 @@ function HomePage(): JSX.Element {
           </h2>
         </header>
         <TooltipsExample />
+        <ButtonAuth></ButtonAuth>
       </section>
     </div>
   );

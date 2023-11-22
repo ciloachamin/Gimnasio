@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -11,7 +11,7 @@ const handler = NextAuth({
       },
       async authorize(credentials, req) {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+          `${backendUrl}/signin`,
           {
             method: "POST",
             body: JSON.stringify({

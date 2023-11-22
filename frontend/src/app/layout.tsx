@@ -8,7 +8,6 @@ const RootLayout: FC<PropsWithChildren> = function ({ children }) {
     <html lang="en">
       <body>
         <FlowbiteContext>      <SessionAuthProvider> {children} </SessionAuthProvider> </FlowbiteContext>
-
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
@@ -11,7 +12,7 @@ const Dashboard = () => {
   }
 
   const getCats = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/cats`, {
+    const res = await fetch(`${backendUrl}/owner`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

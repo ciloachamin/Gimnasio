@@ -16,12 +16,15 @@ import membershipRoutes from './routes/membership.routes.js';
 import ownerRoutes from './routes/owner.routes.js';
 import reservationRoutes from './routes/reservation.routes.js';
 import routineRoutes from './routes/routine.routes.js';
+import cors from 'cors'; // Agrega esta línea
 
 const app = express();
 
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(cors());
 
 app.use("/api", authRoutes);
 app.use("/api", placeRoutes);
