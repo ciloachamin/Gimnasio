@@ -59,25 +59,21 @@ import {
   HiViewBoards,
   HiX,
 } from "react-icons/hi";
-import Header from "./components/header";
-import HeaderHome from "./components/HeaderHome";
-
-import Sidebar from "./components/sidebar";
-import { SidebarProvider } from "./context/SidebarContext";
-import ButtonAuth from "./components/ButtonAuth";
-import Banner from "./components/Banner";
-
+import Header from "../components/header";
+import Sidebar from "../components/sidebar";
+import { SidebarProvider } from "../context/SidebarContext";
+import ButtonAuth from "../components/ButtonAuth";
 export default function Index(): JSX.Element {
   return (
     <SidebarProvider>
-
-      <HeaderHome></HeaderHome>
-      <Banner></Banner>
-
+      <Header />
       <div className="flex dark:bg-gray-900">
         <main className="order-2 mx-4 mt-4 mb-24 flex-[1_0_16rem]">
           <HomePage />
         </main>
+        <div className="order-1">
+          <ActualSidebar />
+        </div>
       </div>
     </SidebarProvider>
   );
@@ -136,7 +132,12 @@ function HomePage(): JSX.Element {
           </h1>
         </header>
       </section>
-
+      <section>
+        <header>
+          <h2 className="mb-3 text-4xl font-bold dark:text-gray-200">Alert</h2>
+        </header>
+        <AlertsExample />
+      </section>
       <section>
         <header>
           <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
@@ -145,9 +146,30 @@ function HomePage(): JSX.Element {
         </header>
         <AccordionExample />
       </section>
-
-
-
+      <section>
+        <header>
+          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
+            Avatar
+          </h2>
+        </header>
+        <AvatarExample />
+      </section>
+      <section>
+        <header>
+          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
+            Badges
+          </h2>
+        </header>
+        <BadgesExample />
+      </section>
+      <section>
+        <header>
+          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
+            Breadcrumb
+          </h2>
+        </header>
+        <BreadcrumbExample />
+      </section>
       <section>
         <header>
           <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
@@ -260,7 +282,32 @@ function HomePage(): JSX.Element {
         </header>
         <SidebarExample />
       </section>
-
+      <section>
+        <header>
+          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
+            Spinners
+          </h2>
+        </header>
+        <SpinnersExample />
+      </section>
+      <section>
+        <header>
+          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
+            Tables
+          </h2>
+        </header>
+        <div className="max-w-full overflow-x-scroll">
+          <TablesExample />
+        </div>
+      </section>
+      <section>
+        <header>
+          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
+            Tabs
+          </h2>
+        </header>
+        <TabsExample />
+      </section>
       <section>
         <header>
           <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
@@ -276,6 +323,15 @@ function HomePage(): JSX.Element {
           </h2>
         </header>
         <ToastExample />
+      </section>
+      <section>
+        <header>
+          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
+            Tooltips
+          </h2>
+        </header>
+        <TooltipsExample />
+        <ButtonAuth></ButtonAuth>
       </section>
     </div>
   );
