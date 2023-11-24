@@ -9,5 +9,11 @@ module.exports = {
     "./src/app/**/*.{ts,tsx}",
   ],
   plugins: [require("flowbite/plugin")],
-  theme: {},
+theme: {
+    extend: {
+      fontFamily: {
+        'mi-fuente': ['Anton', 'sans-serif'],
+      },
+    },
+  },
 };

@@ -4,15 +4,34 @@ import AplicationButton from "./AplicationButton";
 import NotificationButton from './NotificationButton';
 import SearchInput from "./SearchInput";
 import { useSidebarContext } from "../context/SidebarContext";
-import { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
+
 
 import "./Header.css";
 import ButtonAuth from "./ButtonAuth";
 
 const Header: FC<Record<string, never>> = function () {
+    const [isScrolled, setIsScrolled] = useState(false);
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY;
+            // Cambia 100 por la cantidad de desplazamiento que desees antes de aplicar el cambio
+            setIsScrolled(scrollPosition > 100);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        // Limpia el event listener cuando el componente se desmonta
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
     return (
-        <header className=" fitness-club sticky top-0 z-20 bg-white dark:bg-gray-800">
-            <Navbar fluid  className="bg-transparent">
+        <header
+            className={`w-full flex justify-between items-center fitness-club fixed top-0 z-20  ${isScrolled ? "bg-white" : "bg-transparent"
+                }`}
+        >            <Navbar fluid className="w-full bg-transparent" >
 
                 <Navbar.Brand href="/">
                     <Image
@@ -29,21 +48,26 @@ const Header: FC<Record<string, never>> = function () {
                 <div className="flex md:order-2">
                     <Navbar.Toggle />
                     <DarkThemeToggle />
-                    <Button>
+                    <Button  className='bg-[#7F9115] text-white rounded hover:bg-[#647C10]'>
                         Purple to blue
                     </Button>
 
 
                 </div>
 
-                <Navbar.Collapse>
-                    <Navbar.Link href="/" active>
+                <Navbar.Collapse >
+                    <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
+                        }`} href="/" >
                         Home
                     </Navbar.Link>
-                    <Navbar.Link href="/">About</Navbar.Link>
-                    <Navbar.Link href="/">Services</Navbar.Link>
-                    <Navbar.Link href="/">Pricing</Navbar.Link>
-                    <Navbar.Link href="/">Contact</Navbar.Link>
+                    <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
+                        }`} href="/" >About</Navbar.Link>
+                    <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
+                        }`} href="/" >Services</Navbar.Link>
+                    <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
+                        }`} href="/" >Pricing</Navbar.Link>
+                    <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
+                        }`} href="/" >Contact</Navbar.Link>
                 </Navbar.Collapse>
             </Navbar>
         </header>
