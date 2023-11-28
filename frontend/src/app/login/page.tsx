@@ -1,32 +1,10 @@
 "use client";
 import React from 'react';
 import {
-    Accordion,
-    Alert,
-    Avatar,
-    Badge,
-    Breadcrumb,
     Button,
-    Card,
-    Carousel,
     Checkbox,
-    Dropdown,
-    Footer,
     Label,
-    ListGroup,
-    Modal,
-    Navbar,
-    Pagination,
-    Progress,
-    Rating,
-    Sidebar as FlowbiteSidebar,
-    Spinner,
-    Table,
-    Tabs,
     TextInput,
-    Timeline,
-    Toast,
-    Tooltip,
 } from "flowbite-react";
 
 import { signIn } from "next-auth/react";
@@ -67,13 +45,13 @@ const LoginForm: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0  dark:bg-gray-900"  >
-            <a href="/" className="flex items-center justify-center mb-8 text-2xl font-semibold lg:mb-7 dark:text-white">
+            <a href="/" className="flex items-center justify-center mb-8 text-5xl font-semibold lg:mb-7 dark:text-white">
                 <Image
                     alt="Flowbite logo"
                     height="0"
                     src="https://flowbite.com/docs/images/logo.svg"
                     width="0"
-                    style={{ width: '100%', height: 'auto' }}
+                    style={{ width: '100%', height: '100%' }}
 
                 />
 
@@ -94,6 +72,7 @@ const LoginForm: React.FC = () => {
                             name="email"
                             id="email"
                             placeholder="name@company.com"
+                            autoComplete="email"
                             required
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
@@ -111,6 +90,7 @@ const LoginForm: React.FC = () => {
                             name="password"
                             id="password"
                             placeholder="••••••••" required
+                            autoComplete="current-password"
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
                         />

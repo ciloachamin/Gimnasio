@@ -63,6 +63,11 @@ import Header from "../components/header";
 import Sidebar from "../components/sidebar";
 import { SidebarProvider } from "../context/SidebarContext";
 import ButtonAuth from "../components/ButtonAuth";
+import Place from "../components/Place";
+import PlaceStatus from "../components/PlaceState";
+import PlaceRead from "../components/PlaceRead";
+import UserRead from "../components/UserRead";
+
 export default function Index(): JSX.Element {
   return (
     <SidebarProvider>
@@ -90,6 +95,10 @@ function ActualSidebar(): JSX.Element {
           <Sidebar.Item href="#" icon={HiViewBoards}>
             Kanban
           </Sidebar.Item>
+          <Sidebar.Collapse icon={HiShoppingBag} label="CRUD">
+            <Sidebar.Item href="#">Products</Sidebar.Item>
+            <Sidebar.Item href="/crud/user">Users</Sidebar.Item>
+          </Sidebar.Collapse>
           <Sidebar.Item href="#" icon={HiInbox}>
             Inbox
           </Sidebar.Item>
@@ -123,20 +132,32 @@ function ActualSidebar(): JSX.Element {
 }
 
 function HomePage(): JSX.Element {
+
+  const hasPlaces = false
+const onCreatePlace = () => {
+  // Tu lógica para agregar lugares
+};
+
   return (
     <div className="p-6">
+
+<PlaceStatus hasPlaces={hasPlaces} />
+<PlaceRead></PlaceRead>
+<UserRead></UserRead>
       <section>
         <header>
           <h1 className="mb-6 text-5xl font-extrabold dark:text-white">
             Welcome to <code>Flowbite</code> on <code>Next.js</code>!
           </h1>
+          
         </header>
       </section>
       <section>
         <header>
           <h2 className="mb-3 text-4xl font-bold dark:text-gray-200">Alert</h2>
         </header>
-        <AlertsExample />
+
+        <Place></Place>
       </section>
       <section>
         <header>

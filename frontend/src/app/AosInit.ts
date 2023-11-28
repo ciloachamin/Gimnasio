@@ -6,8 +6,7 @@ import { useEffect } from 'react';
 export const AosInit = () => {
   useEffect(() => {
     Aos.init({
-      duration: 2500,
-      delay: 400,
+      duration: 2000,
       once: true,
       offset: 0,
     });

@@ -73,9 +73,13 @@ async function fetchMembersAndFilterByEmail(email) {
       return [];
     }
   }
+
+
 export const signin = async (req, res) => {
-    const userData = req.body;
+  const userData = req.body;
   const result = await checkIfUserExists(userData.email)
+  const holap=result[0][6]
+
 
   if (!result) {
     return res.status(400).json({
@@ -99,7 +103,11 @@ export const signin = async (req, res) => {
     maxAge: 24 * 60 * 60 * 1000, // 1 day
   });
 
-  return res.json(result[0]);
+  return res.json({
+    user: result[0],
+    email: holap,
+    token: token,
+  });
 };
 async function checkIfUserExists(email) {
     try {

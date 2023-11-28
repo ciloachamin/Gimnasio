@@ -1,19 +1,33 @@
-import { DarkThemeToggle, Navbar, Avatar, Dropdown, } from "flowbite-react";
+'use client';
+import { DarkThemeToggle, Navbar, Avatar, Dropdown } from "flowbite-react";
 import Image from "next/image";
 import AplicationButton from "./AplicationButton";
 import NotificationButton from './NotificationButton';
 import SearchInput from "./SearchInput";
 import { useSidebarContext } from "../context/SidebarContext";
 import { FC } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 const Header: FC<Record<string, never>> = function () {
   const { isOpenOnSmallScreens, isPageWithSidebar, setOpenOnSmallScreens } =
-  useSidebarContext();
+    useSidebarContext();
+
+
+
+  const { data: session, status } = useSession();
+
+  const handleSignOut = async () => {
+    await signOut();
+    window.location.href = "/";
+
+    // Redirige a la página de inicio después de cerrar sesión
+  };
 
   return (
     <header className="sticky top-0 z-20 bg-white dark:bg-gray-800">
       <Navbar fluid>
-      {isPageWithSidebar && (
+        {isPageWithSidebar && (
           <button
             aria-controls="sidebar"
             aria-expanded="true"
@@ -62,10 +76,10 @@ const Header: FC<Record<string, never>> = function () {
         </Navbar.Brand>
 
 
-     
+
 
         <div className="flex md:order-2">
-        <SearchInput></SearchInput>
+          <SearchInput></SearchInput>
         </div>
 
 
@@ -79,20 +93,21 @@ const Header: FC<Record<string, never>> = function () {
           <AplicationButton></AplicationButton>
           <Dropdown
             arrowIcon={false}
+            dismissOnClick={false} 
             inline
             label={
-              <Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded  size="md"/>
+              <Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded size="md" />
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">Bonnie Green</span>
-              <span className="block truncate text-sm font-medium">name@flowbite.com</span>
+              <span className="block text-sm">{`${session?.user?.user[2]} ${session?.user?.user[3]}`}</span>
+              <span className="block truncate text-sm font-medium">{session?.user?.email}</span>
             </Dropdown.Header>
-            <Dropdown.Item>Dashboard</Dropdown.Item>
-            <Dropdown.Item>Settings</Dropdown.Item>
-            <Dropdown.Item>Earnings</Dropdown.Item>
+            <Dropdown.Item  >Dashboard</Dropdown.Item>
+            <Dropdown.Item >Settings</Dropdown.Item>
+            <Dropdown.Item >Earnings</Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item>Sign out</Dropdown.Item>
+            <Dropdown.Item  onClick={() => handleSignOut()}>Sign out</Dropdown.Item>
           </Dropdown>
 
 
@@ -113,7 +128,7 @@ const Header: FC<Record<string, never>> = function () {
 
 
 
-    
+
 
 
 

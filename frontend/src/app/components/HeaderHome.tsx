@@ -1,16 +1,18 @@
-import { DarkThemeToggle, Navbar, Avatar, Dropdown, Button, } from "flowbite-react";
+import { DarkThemeToggle, Navbar } from "flowbite-react";
 import Image from "next/image";
-import AplicationButton from "./AplicationButton";
-import NotificationButton from './NotificationButton';
-import SearchInput from "./SearchInput";
-import { useSidebarContext } from "../context/SidebarContext";
+import ButtonAuthHome from "./ButtonAuthHome";
 import React, { FC, useState, useEffect } from "react";
-
+import { useSession } from "next-auth/react";
 
 import "./Header.css";
-import ButtonAuth from "./ButtonAuth";
 
 const Header: FC<Record<string, never>> = function () {
+    const [expanded, setExpanded] = useState(false);
+
+    const handleToggle = () => {
+        setExpanded(!expanded);
+    };
+
     const [isScrolled, setIsScrolled] = useState(false);
     useEffect(() => {
         const handleScroll = () => {
@@ -29,9 +31,16 @@ const Header: FC<Record<string, never>> = function () {
 
     return (
         <header
-            className={`w-full flex justify-between items-center fitness-club fixed top-0 z-20  ${isScrolled ? "bg-white" : "bg-transparent"
+            className={`w-full  fitness-club absolute top-0 z-20  ${isScrolled ? "bg-white dark:text-white" : "bg-transparent  sm:text-white max-sm:text-white dark:text-white "
                 }`}
-        >            <Navbar fluid className="w-full bg-transparent" >
+            data-aos='fade-down' data-aos-delay='50'
+        >            <Navbar fluid
+
+            className={` w-full  ${expanded ? "bg-black " : "bg-transparent"
+
+
+                }`}
+        >
 
                 <Navbar.Brand href="/">
                     <Image
@@ -40,34 +49,57 @@ const Header: FC<Record<string, never>> = function () {
                         src="/favicon.png"
                         width="24"
                     />
-                    <span className=" self-center whitespace-nowrap px-3 text-xl font-semibold dark:text-white">
+                    <span
+                        className={`self-center whitespace-nowrap px-3 text-xl font-semibold"}`}
+                    >
                         Flowbite
                     </span>
+
+
                 </Navbar.Brand>
 
                 <div className="flex md:order-2">
-                    <Navbar.Toggle />
-                    <DarkThemeToggle />
-                    <Button  className='bg-[#7F9115] text-white rounded hover:bg-[#647C10]'>
-                        Purple to blue
-                    </Button>
+                    <Navbar.Toggle
+                        className="text-white hover:bg-[#647C10]"
+                        onClickCapture={handleToggle}
+
+                    />
+                    <DarkThemeToggle className="text-white hover:bg-[#647C10]" />
+
+                    <ButtonAuthHome/>
+
 
 
                 </div>
 
-                <Navbar.Collapse >
-                    <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
-                        }`} href="/" >
+                <Navbar.Collapse>
+                    <Navbar.Link
+
+                        className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
+                            }
+                        
+                        ${expanded ? "max-sm:text-gray-400" : ""
+
+
+                            }
+                        `} href="/" >
                         Home
                     </Navbar.Link>
                     <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
-                        }`} href="/" >About</Navbar.Link>
+                        }  ${expanded ? "max-sm:text-gray-400" : ""}
+                        `} href="/" >About</Navbar.Link>
                     <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
-                        }`} href="/" >Services</Navbar.Link>
+                        }
+                        ${expanded ? "max-sm:text-gray-400" : ""}
+                        `} href="/" >Services</Navbar.Link>
                     <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
-                        }`} href="/" >Pricing</Navbar.Link>
+                        }
+                        ${expanded ? "max-sm:text-gray-400" : ""}
+                        `} href="/" >Pricing</Navbar.Link>
                     <Navbar.Link className={`md:hover:text-[#7F9115] ${isScrolled ? "" : "text-gray-100"
-                        }`} href="/" >Contact</Navbar.Link>
+                        }
+                        ${expanded ? "max-sm:text-gray-400" : ""}
+                        `} href="/" >Contact</Navbar.Link>
                 </Navbar.Collapse>
             </Navbar>
         </header>

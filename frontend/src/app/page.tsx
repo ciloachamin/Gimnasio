@@ -70,17 +70,17 @@ import Banner from "./components/Banner";
 export default function Index(): JSX.Element {
   return (
     <SidebarProvider>
+            <HeaderHome />
 
-  
-   
 
-      <div className="flex dark:bg-gray-900">
-        <main className="order-2  flex-[1_0_16rem]">
-        <HeaderHome></HeaderHome>
-        <Banner></Banner>
-          <HomePage />
-        </main>
-      </div>
+      <main className="">
+      <HomePage />
+        <div className="order-1">
+
+        </div>
+
+      </main>
+
     </SidebarProvider>
   );
 }
@@ -130,155 +130,11 @@ function ActualSidebar(): JSX.Element {
 
 function HomePage(): JSX.Element {
   return (
-    <div className="p-6">
-      <section>
-        <header>
-          <h1 className="mb-6 text-5xl font-extrabold dark:text-white">
-            Welcome to <code>Flowbite</code> on <code>Next.js</code>!
-          </h1>
-        </header>
-      </section>
-
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Accordion
-          </h2>
-        </header>
-        <AccordionExample />
-      </section>
-
-
-
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Buttons
-          </h2>
-        </header>
-        <ButtonsExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Button group
-          </h2>
-        </header>
-        <ButtonGroupExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Card
-          </h2>
-        </header>
-        <CardExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Carousel
-          </h2>
-        </header>
-        <CarouselExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Dropdown
-          </h2>
-        </header>
-        <DropdownExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Forms
-          </h2>
-        </header>
-        <FormsExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Footer
-          </h2>
-        </header>
-        <FooterExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            List group
-          </h2>
-        </header>
-        <ListGroupExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Modal
-          </h2>
-        </header>
-        <ModalExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Navbars
-          </h2>
-        </header>
-        <NavbarsExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Pagination
-          </h2>
-        </header>
-        <PaginationExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Progress
-          </h2>
-        </header>
-        <ProgressExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Rating
-          </h2>
-        </header>
-        <RatingExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Sidebar
-          </h2>
-        </header>
-        <SidebarExample />
-      </section>
-
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Timeline
-          </h2>
-        </header>
-        <TimelineExample />
-      </section>
-      <section>
-        <header>
-          <h2 className="mt-9 mb-3 text-4xl font-bold dark:text-gray-200">
-            Toast
-          </h2>
-        </header>
-        <ToastExample />
-      </section>
+    <div >
+      <div>
+      <Banner></Banner>
+      </div>
+    
     </div>
   );
 }

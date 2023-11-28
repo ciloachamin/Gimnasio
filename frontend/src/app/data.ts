@@ -39,7 +39,7 @@ export const banner = {
   titlePart2: '– you fit here.',
   subtitle:
     'We provide serious fitness but within a fun and friendly, safe space.',
-  textBtn: 'Join Now',
+  textBtn: 'Sign Up',
   img: '',
 };
 
