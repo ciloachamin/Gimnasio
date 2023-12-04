@@ -223,17 +223,6 @@ const UserRow: FC<UserRowProps> = ({ user, onDelete }) => {
             <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
                 {user.name}
             </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                {user.lastname}
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                {user.email}
-            </Table.Cell>
-            <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                {user.password}
-            </Table.Cell>
-
-
             <Table.Cell className="whitespace-nowrap p-4 text-base font-normal text-gray-900 dark:text-white">
                 {isActive ? (
                     <div className="flex items-center">
@@ -275,7 +264,6 @@ const UserTable: FC<UserTableProps> = ({ users, onDelete }) => {
 
                 <Table.HeadCell>Name</Table.HeadCell>
                 <Table.HeadCell>Last Name</Table.HeadCell>
-                <Table.HeadCell>Email</Table.HeadCell>
                 <Table.HeadCell>Status</Table.HeadCell>
                 <Table.HeadCell>Actions</Table.HeadCell>
 

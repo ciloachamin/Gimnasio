@@ -1,0 +1,88 @@
+-- Datos para la tabla 'place'
+INSERT INTO public.place (pla_id, pla_name, pla_location, pla_schedule, pla_classschedule, pla_type)
+VALUES
+  (1, 'Lugar A', 'Ubicación A', 'Horario A', 'Clase A', 'Tipo A'),
+  (2, 'Lugar B', 'Ubicación B', 'Horario B', 'Clase B', 'Tipo B');
+
+
+-- Datos para la tabla 'member'
+INSERT INTO public.member (mem_id, pla_id, mem_name, mem_lastname, mem_code, mem_phone, mem_email, mem_location, mem_password)
+VALUES
+  (1, 1, 'Miembro A', 'Apellido A', 'Código A', '1234567890', 'miembroA@example.com', 'Ubicación A', 'password123'),
+  (2, 2, 'Miembro B', 'Apellido B', 'Código B', '9876543210', 'miembroB@example.com', 'Ubicación B', 'password456');
+
+-- Datos para la tabla 'attendance'
+INSERT INTO public.attendance (att_id, pla_id, mem_id, att_entry, att_exit)
+VALUES
+  (1, 1, 1, '2023-11-01', '2023-11-01'),
+  (2, 2, 2, '2023-11-02', '2023-11-02');
+  -- Datos para la tabla 'invoice'
+  
+INSERT INTO public.invoice (inv_id, mem_id, inv_date, inv_number, inv_total)
+VALUES
+  (1, 1, '2023-11-01', 1001, 50.00),
+  (2, 2, '2023-11-02', 1002, 75.00);
+
+
+-- Datos para la tabla 'details'
+INSERT INTO public.details (det_id, inv_id, det_description, det_price, det_amount)
+VALUES
+  (1, 1, 'Descripción A', 20.00, 2),
+  (2, 2, 'Descripción B', 30.00, 3);
+
+
+-- Datos para la tabla 'donations'
+INSERT INTO public.donations (don_id, mem_id, don_date, don_amount, don_name, don_price)
+VALUES
+  (1, 1, '2023-11-01', 100.00, 'Donación Juan', 100.00),
+  (2, 2, '2023-11-02', 50.00, 'Donación Ana', 50.00);
+  
+  -- Datos para la tabla 'membership'
+INSERT INTO public.membership (mbs_id, rou_id, mem_id, mbs_star_date, mbs_due_date, mbs_state)
+VALUES
+  (1, NULL, 1, '2023-11-01', '2023-12-01', 't'),
+  (2, NULL, 2, '2023-11-02', '2023-12-02', 't');
+
+  
+  -- Datos para la tabla 'routine'
+INSERT INTO public.routine (rou_id, mbs_id, rou_type, rou_name)
+VALUES
+  (1, 1, 'Tipo A', 'Rutina A'),
+  (2, 2, 'Tipo B', 'Rutina B');
+
+
+-- Datos para la tabla 'exercise'
+INSERT INTO public.exercise (exe_id, rou_id, exe_name, exe_set, exe_reps)
+VALUES
+  (1, 1, 'Ejercicio 1', 3, 12),
+  (2, 2, 'Ejercicio 2', 4, 10);
+
+-- Datos para la tabla 'owner'
+INSERT INTO public.owner (own_id, own_name, own_lastname, own_email, own_password, own_role)
+VALUES
+  (1, 'Propietario A', 'Apellido A', 'propietarioA@example.com', 'password123', 'Rol A'),
+  (2, 'Propietario B', 'Apellido B', 'propietarioB@example.com', 'password456', 'Rol B');
+
+
+
+-- Datos para la tabla 'manage'
+INSERT INTO public.manage (pla_id, own_id)
+VALUES
+  (1, 1),
+  (2, 2);
+
+
+
+
+-- Datos para la tabla 'product'
+INSERT INTO public.product (pro_id, inv_id, pro_name, pro_description, pro_cost, pro_stock, pro_category, pro_duration, pro_benefits)
+VALUES
+  (1, 1, 'Producto A', 'Descripción Producto A', 25.00, 10, 'Categoría A', 30, 'Beneficios A'),
+  (2, 2, 'Producto B', 'Descripción Producto B', 35.00, 15, 'Categoría B', 60, 'Beneficios B');
+
+-- Datos para la tabla 'reservation'
+INSERT INTO public.reservation (res_id, mem_id, pla_id, res_date, res_hour, res_state)
+VALUES
+  (1, 1, 1, '2023-11-01', '08:00:00', 't'),
+  (2, 2, 2, '2023-11-02', '07:30:00', 't');
+

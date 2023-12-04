@@ -67,7 +67,7 @@ const Banner: React.FC<BannerProps> = () => {
                     data-aos='fade-down' data-aos-delay='200'
                   >{subtitle}</p>
 
-                  <Link href="/sign-up">
+                  <Link href="/authentication/sign-up">
                     <Button className="bg-[#7F9115] fitness-club text-white rounded hover:bg-[#232811]"
                       data-aos='fade-down' data-aos-delay='300'>
                       {textBtn}

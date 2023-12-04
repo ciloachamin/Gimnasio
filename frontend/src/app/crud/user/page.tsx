@@ -84,7 +84,7 @@ export default function Index(): JSX.Element {
         <SidebarProvider>
             <Header />
             <div className="flex dark:bg-gray-900">
-                <main className="order-2 mx-4 mt-4 mb-24 flex-[1_0_16rem]">
+                <main className="order-2">
                     <HomePage />
                 </main>
                 <div className="order-1">
@@ -127,7 +127,7 @@ function ActualSidebar(): JSX.Element {
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>
                 <Sidebar.ItemGroup>
-                    <Sidebar.Item href="/login/page" icon={HiChartPie}>
+                    <Sidebar.Item href="/authentication/log-in/page" icon={HiChartPie}>
                         Upgrade to Pro
                     </Sidebar.Item>
                     <Sidebar.Item href="#" icon={HiViewBoards}>
@@ -150,7 +150,7 @@ function HomePage(): JSX.Element {
     };
 
     return (
-        <div className="p-6">
+        <div>
             <UserListPage></UserListPage>
         </div>
     );
@@ -158,15 +158,15 @@ function HomePage(): JSX.Element {
 
 function UserListPage(): JSX.Element {
 
-      const handleUserCreate = () => {
-    // Lógica para actualizar la lista de usuarios después de la creació
-    console.log('User created successfully!');
-  };
+    const handleUserCreate = () => {
+        // Lógica para actualizar la lista de usuarios después de la creació
+        console.log('User created successfully!');
+    };
 
 
 
     return (
-        <div className="p-6">
+        <div>
             <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
                 <div className="mb-1 w-full">
                     <div className="mb-4">
@@ -230,7 +230,7 @@ function UserListPage(): JSX.Element {
                             </div>
                         </div>
                         <div className="ml-auto flex items-center space-x-2 sm:space-x-3">
-                            <UserCreate  onCreate={handleUserCreate}></UserCreate>
+                            <UserCreate onCreate={handleUserCreate}></UserCreate>
                             <Button color="gray">
                                 <div className="flex items-center gap-x-3">
                                     <HiDocumentDownload className="text-xl" />
@@ -238,9 +238,12 @@ function UserListPage(): JSX.Element {
                                 </div>
                             </Button>
                         </div>
+
                     </div>
                 </div>
+
             </div>
+
             <div className="flex flex-col">
                 <div className="overflow-x-auto">
                     <div className="inline-block min-w-full align-middle">
@@ -248,13 +251,14 @@ function UserListPage(): JSX.Element {
                             {/* Reemplaza AllUsersTable con tu componente real */}
                             {/* <AllUsersTable /> */}
                             <UserRead />
+
                         </div>
                     </div>
                 </div>
             </div>
             {/* Reemplaza Pagination con tu componente real */}
             {/* <Pagination /> */}
-            
+
         </div>
     );
 };

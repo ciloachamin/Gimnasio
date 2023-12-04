@@ -113,7 +113,7 @@ function ActualSidebar(): JSX.Element {
           </Sidebar.Item>
         </Sidebar.ItemGroup>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="/login/page" icon={HiChartPie}>
+          <Sidebar.Item href="/authentication/log-in/page" icon={HiChartPie}>
             Upgrade to Pro
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={HiViewBoards}>

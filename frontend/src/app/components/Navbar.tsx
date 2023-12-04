@@ -33,7 +33,7 @@ const Navbar = () => {
         ) : (
           <>
             <Link
-              href="/login"
+              href="/authentication/log-in"
               className="btn btn-primary btn-sm"
             >
               Login

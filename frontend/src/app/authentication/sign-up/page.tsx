@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 "use client";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
-import { use, type FC } from "react";
+import {  type FC } from "react";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -33,7 +33,7 @@ const SignUpPage: FC = function () {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          mem_id: 1,
+          mem_id: 3,
           pla_id: 1,
           mem_name: name,
           mem_lastname: lastname,
@@ -69,13 +69,13 @@ const SignUpPage: FC = function () {
 
 
   return (
-    <div className="flex flex-col items-center justify-center px-6 lg:h-screen lg:gap-y-12">
+    <div className="flex flex-col items-center justify-center px-6 pt-8 mx-auto  pt:mt-0 dark:bg-gray-900">
       <a href="/" className=" flex items-center justify-center mb-8 text-5xl font-semibold lg:mb-7 dark:text-white">
         <Image
           alt="Flowbite logo"
-          height="0"
+          height="24"
           src="/../favicon.png"
-          width="0"
+          width="24"
           style={{ width: '100%', height: '100%' }}
 
         />
@@ -107,7 +107,7 @@ const SignUpPage: FC = function () {
             <Label htmlFor="lastname">Your last name</Label>
             <TextInput
               id="lastname"
-              name="lastname"
+              name="latname"
               placeholder="Doe"
               autoComplete="lastname"
               type="text"
@@ -207,10 +207,11 @@ const SignUpPage: FC = function () {
             </Link>
           </p>
         </form>
-        {errors.length > 0 && (
+        {errors && errors.length > 0 && (
           <div className="alert alert-danger mt-2">
             <ul className="mb-0">
               {errors.map((error) => (
+                // Renderiza cada error
                 <li key={error}>{error}</li>
               ))}
             </ul>

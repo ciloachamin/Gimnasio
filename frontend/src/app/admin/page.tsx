@@ -116,7 +116,7 @@ function ActualSidebar(): JSX.Element {
           </Sidebar.Item>
         </Sidebar.ItemGroup>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="/login/page" icon={HiChartPie}>
+          <Sidebar.Item href="/authentication/log-in/page" icon={HiChartPie}>
             Upgrade to Pro
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={HiViewBoards}>
@@ -143,7 +143,6 @@ const onCreatePlace = () => {
 
 <PlaceStatus hasPlaces={hasPlaces} />
 <PlaceRead></PlaceRead>
-<UserRead></UserRead>
       <section>
         <header>
           <h1 className="mb-6 text-5xl font-extrabold dark:text-white">
