@@ -1,51 +1,57 @@
 import { FC, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import PlacesList from './PlacesList';
+import PlaceStatus from './PlaceState';
 
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 const ReadPlace: FC = function () {
     const { data: session, status } = useSession();
     const [places, setPlaces] = useState([]);
+    const idUser = session?.user?.user[0];
 
     const fetchPlaces = async () => {
         if (status === "loading" || !session) {
             // La sesión aún se está cargando o el usuario no está autenticado
             return;
         }
-
+    
         try {
-            const placesRes = await fetch(`${backendUrl}/place`, {
+            const placesRes = await fetch(`${backendUrl}/places/${idUser}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     authorization: `${session?.user?.token}`,
                 },
             });
-
-            if (!placesRes.ok) {
-                throw new Error('Error al obtener lugares');
+    
+            if (placesRes.status === 404) {
+                // Si la respuesta es un 404 (Not Found), maneja este caso específico
+                console.log('No se encontraron lugares');
+                setPlaces([]);
+            } else {
+                // Verifica si la respuesta es exitosa (código 2xx)
+                if (placesRes.ok) {
+                    const placesData = await placesRes.json();
+                    setPlaces(placesData);
+                } else {
+                    // Maneja otros códigos de estado de error
+                    console.error(`Error al obtener lugares: ${placesRes.status} - ${placesRes.statusText}`);
+                    setPlaces([]);
+                }
             }
-
-            const placesData = await placesRes.json();
-            const transformedData = placesData.map(([id, name, location, schedule, classSchedule, type]: [number, string, string, string, string, string]) => ({
-                id,
-                name,
-                location,
-                schedule,
-                classSchedule,
-                type,
-            }));
-
-            setPlaces(transformedData);
         } catch (error) {
+            // Maneja errores de red u otros
             console.error('Error fetching places:', error);
+            setPlaces([]);
         }
     };
+    
 
     useEffect(() => {
         fetchPlaces();
     }, [session, status]);
+    const hasPlaces = places.length > 0;
 
     const handleDeletePlace = async (id: number) => {
         if (session) {
@@ -64,7 +70,8 @@ const ReadPlace: FC = function () {
 
     return (
         <>
-            <PlacesList places={places} onDeletePlace={handleDeletePlace} />
+            <PlaceStatus hasPlaces={hasPlaces}></PlaceStatus>
+            <PlacesList places={places} onDeletePlace={handleDeletePlace}/>
         </>
     );
 };

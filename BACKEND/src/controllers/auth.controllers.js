@@ -78,14 +78,17 @@ async function fetchMembersAndFilterByEmail(email) {
 export const signin = async (req, res) => {
   const userData = req.body;
   const result = await checkIfUserExists(userData.email)
-  const holap=result[0][6]
+  const email=result[0][6]
+  console.log("aaaaa")
 
+  console.log(result)
 
   if (!result) {
     return res.status(400).json({
       message: "El correo no esta registrado",
     });
   }
+  //aqui esta el errror dependiendo de si es owner o member cambia la posicion la clave y el email
   const validPassword = await bcrypt.compare(userData.password, result[0][8]);
 
   if (!validPassword) {
@@ -105,7 +108,7 @@ export const signin = async (req, res) => {
 
   return res.json({
     user: result[0],
-    email: holap,
+    email: email,
     token: token,
   });
 };

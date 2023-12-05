@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 
+import adminRoutes from './routes/admin.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import placeRoutes from './routes/place.routes.js';
 import productRoutes from './routes/product.routes.js';
@@ -25,7 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors());
-
+app.use("/api", adminRoutes);
 app.use("/api", authRoutes);
 app.use("/api", placeRoutes);
 app.use("/api", productRoutes);

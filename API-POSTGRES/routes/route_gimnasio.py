@@ -13,6 +13,31 @@ Routine)
 route_gimnasio = APIRouter()
 
 
+@route_gimnasio.get('/places-by-owner/{own_id}')
+def get_places_by_owner(own_id):
+    try:
+        own_id = int(own_id)
+        cur = db.connection.cursor()
+        cur.execute(
+            'SELECT p.* FROM public.place p JOIN public.manage m ON p.pla_id = m.pla_id WHERE m.own_id = %(own_id)s',
+            {"own_id": own_id}
+        )
+        result = cur.fetchall()
+
+        if not result:
+            return "Places not found for the specified owner"
+
+        places_info = [{"pla_id": row[0], "pla_name": row[1], "pla_location": row[2], "pla_schedule": row[3], "pla_classschedule": row[4], "pla_type": row[5]} for row in result]
+
+        return  places_info
+    except ValueError:
+        return "Invalid own_id. Please provide a valid integer ID."
+    except Exception as e:
+        print("Error:", str(e))
+        return "An error occurred"
+
+
+
 # Rutas para la tabla ATTENDANCE
 @route_gimnasio.get('/attendance')
 def get_attendance():
