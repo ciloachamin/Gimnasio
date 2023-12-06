@@ -55,7 +55,19 @@ async function fetchOwnersAndFilterByEmail(email) {
       const response = await axios.get(`${url}/owner`);
       const owners = response.data;
       const existingUsers = owners.filter((owner) => owner[3] === email);
-      return existingUsers;
+
+      const transformedOwners = existingUsers.map(owner => {
+        // Crear un nuevo objeto con el nombre de la columna "mem_email" cambiado a "email"
+        return {
+          id: owner[0],
+          name: owner[1],
+          lastname: owner[2],
+          email: owner[3],
+          password: owner[4],
+          role: owner[5],
+        };
+      });
+      return transformedOwners;
     } catch (error) {
       console.error('Error al obtener usuarios:', error);
       return [];
@@ -66,52 +78,65 @@ async function fetchMembersAndFilterByEmail(email) {
       const response = await axios.get(`${url}/member`);
       const members = response.data;
       const existingUsers = members.filter((member) => member[6] === email);
+      const transformedOwners = existingUsers.map(member => {
+        // Crear un nuevo objeto con el nombre de la columna "mem_email" cambiado a "email"
+        return {
+          id: member[0],
+          placeId: member[1],
+          name: member[2],
+          lastname: member[3],
+          code: member[4],
+          phone: member[5],
+          email: member[6],
+          location: member[7],
+          password: member[8],
+        };
+      });
   
-      return existingUsers;
+      return transformedOwners;
     } catch (error) {
       console.error('Error al obtener miembros:', error);
       return [];
     }
   }
 
-
-export const signin = async (req, res) => {
-  const userData = req.body;
-  const result = await checkIfUserExists(userData.email)
-  const email=result[0][6]
-  console.log("aaaaa")
-
-  console.log(result)
-
-  if (!result) {
-    return res.status(400).json({
-      message: "El correo no esta registrado",
+  export const signin = async (req, res) => {
+    const userData = req.body;
+    const result = await checkIfUserExists(userData.email);
+  
+    if (!result || result.length === 0) {
+      return res.status(400).json({
+        message: "El correo no está registrado",
+      });
+    }
+  
+    const email = result[0].email;
+  
+    // Aquí está el error dependiendo de si es owner o member, cambia la posición de la clave y el email
+    const validPassword = await bcrypt.compare(userData.password, result[0].password);
+  
+    if (!validPassword) {
+      return res.status(400).json({
+        message: "La contraseña es incorrecta",
+      });
+    }
+  
+    const token = await createAccessToken({ id: result[0].id });
+  
+    res.cookie("token", token, {
+      // httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
-  }
-  //aqui esta el errror dependiendo de si es owner o member cambia la posicion la clave y el email
-  const validPassword = await bcrypt.compare(userData.password, result[0][8]);
-
-  if (!validPassword) {
-    return res.status(400).json({
-      message: "La contraseña es incorrecta",
+  
+    return res.json({
+      user: result[0],
+      email: email,
+      token: token,
     });
-  }
-
-  const token = await createAccessToken({ id: result[0][0]});
-
-  res.cookie("token", token, {
-    // httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-  });
-
-  return res.json({
-    user: result[0],
-    email: email,
-    token: token,
-  });
-};
+  };
+  
 async function checkIfUserExists(email) {
     try {
       const existingOwners = await fetchOwnersAndFilterByEmail(email);

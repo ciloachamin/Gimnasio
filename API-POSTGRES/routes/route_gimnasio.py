@@ -911,6 +911,34 @@ def create_place(place: Place):
         db.connection.rollback()
         print("Error created place:", str(e))
         raise HTTPException(status_code=500, detail="Error created place")
+    
+
+@route_gimnasio.post('/places-manage/{own_id}')
+def create_place_with_manage(place: Place, own_id: int):
+    new_place = {
+        "pla_name": place.pla_name,
+        "pla_location": place.pla_location,
+        "pla_schedule": place.pla_schedule,
+        "pla_classschedule": place.pla_classschedule,
+        "pla_type": place.pla_type
+    }
+
+    cur = db.connection.cursor()
+    try:
+        # Inserta el nuevo lugar y devuelve el pla_id
+        cur.execute('INSERT INTO PLACE (pla_name, pla_location, pla_schedule, pla_classschedule, pla_type) VALUES (%(pla_name)s, %(pla_location)s, %(pla_schedule)s, %(pla_classschedule)s, %(pla_type)s) RETURNING pla_id', new_place)
+        new_place_id = cur.fetchone()[0]
+
+        # Inserta la entrada correspondiente en la tabla 'manage'
+        cur.execute('INSERT INTO manage (pla_id, own_id) VALUES (%s, %s)', (new_place_id, own_id))
+
+        db.connection.commit()
+
+        return {"place_id": new_place_id, "message": "Place and manage entry created successfully"}
+    except Exception as e:
+        db.connection.rollback()
+        print("Error creating place and manage entry:", str(e))
+        raise HTTPException(status_code=500, detail="Error creating place and manage entry")
 
 @route_gimnasio.put('/place/{pla_id}')
 def update_place(pla_id, updated_place: Place):
@@ -952,6 +980,37 @@ def delete_place(pla_id):
             return "Place deleted successfully"
         else:
             return "Place not found. No place was deleted."
+    except ValueError:
+        return "Invalid pla_id. Please provide a valid integer ID."
+    except Exception as e:
+        # En caso de error, revertir la transacción
+        db.connection.rollback()
+        # Puedes registrar el error para depuración
+        print("Error deleting place:", str(e))
+        # Lanzar una excepción HTTP para informar del error al cliente
+        raise HTTPException(status_code=500, detail="Error deleting place")
+    
+    
+@route_gimnasio.delete('/place-delete/{pla_id}')
+def delete_place(pla_id):
+    try:
+        pla_id = int(pla_id)
+        cur = db.connection.cursor()
+
+        # Eliminar entrada en MANAGE
+        cur.execute('DELETE FROM MANAGE WHERE pla_id=%s', (pla_id,))
+
+        # Eliminar el lugar
+        cur.execute('DELETE FROM PLACE WHERE pla_id=%s', (pla_id,))
+
+        # Obtener el número de filas afectadas por la operación de eliminación en PLACE
+        rows_deleted = cur.rowcount
+        db.connection.commit()
+
+        if rows_deleted > 0:
+            return "Place and corresponding manage entry deleted successfully"
+        else:
+            return "Place not found. No place or manage entry was deleted."
     except ValueError:
         return "Invalid pla_id. Please provide a valid integer ID."
     except Exception as e:

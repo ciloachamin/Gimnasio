@@ -17,12 +17,13 @@ const CreatePlaceModal: FC = function () {
     const [placeClassSchedule, setPlaceClassSchedule] = useState<string>("");
     const [placeType, setPlaceType] = useState<string>("");
 
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setErrors([]);
 
         const res = await fetch(
-            `${backendUrl}/place`,
+            `${backendUrl}/places/${session?.user?.user.id}`,
             {
                 method: "POST",
                 headers: {
@@ -42,11 +43,12 @@ const CreatePlaceModal: FC = function () {
 
         const responseAPI = await res.json();
 
+        console.log(responseAPI);   
+
         if (!res.ok) {
-            setErrors(responseAPI.message);
+            setErrors([responseAPI.message]); // Cambia a un array para mantener la consistencia
             return;
         }
-
         setOpen(false);
 
     };

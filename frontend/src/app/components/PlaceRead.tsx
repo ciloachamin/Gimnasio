@@ -8,7 +8,7 @@ const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 const ReadPlace: FC = function () {
     const { data: session, status } = useSession();
     const [places, setPlaces] = useState([]);
-    const idUser = session?.user?.user[0];
+    const idUser = session?.user?.user.id;
 
     const fetchPlaces = async () => {
         if (status === "loading" || !session) {
@@ -53,9 +53,11 @@ const ReadPlace: FC = function () {
     }, [session, status]);
     const hasPlaces = places.length > 0;
 
+    //verificar el error de eliminar un lugar 
+    //no se puede eliminar asi por la relacion que tiene con la tabla manage
     const handleDeletePlace = async (id: number) => {
         if (session) {
-            await fetch(`${backendUrl}/place/${id}`, {
+            await fetch(`${backendUrl}/places/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

@@ -36,6 +36,8 @@ export const getPlace = async (req, res, next) => {
 export const createPlace = async (req, res, next) => {
     try {
       const response = await axios.post(`${url}/place`, req.body);
+      console.log("sadfasdasd");
+      console.log(response.data); 
       return res.json("Lugar creado con éxito");
     } catch (error) {
         console.error('Error al crear el lugar: ', error);
