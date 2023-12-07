@@ -64,9 +64,6 @@ import Sidebar from "../components/sidebar";
 import { SidebarProvider } from "../context/SidebarContext";
 import ButtonAuth from "../components/ButtonAuth";
 import Place from "../components/Place";
-import PlaceStatus from "../components/PlaceState";
-import PlaceRead from "../components/PlaceRead";
-import UserRead from "../components/UserRead";
 
 export default function Index(): JSX.Element {
   return (
@@ -133,16 +130,9 @@ function ActualSidebar(): JSX.Element {
 
 function HomePage(): JSX.Element {
 
-  const hasPlaces = false
-const onCreatePlace = () => {
-  // Tu lógica para agregar lugares
-};
 
   return (
     <div className="p-6">
-
-<PlaceStatus hasPlaces={hasPlaces} />
-<PlaceRead></PlaceRead>
       <section>
         <header>
           <h1 className="mb-6 text-5xl font-extrabold dark:text-white">

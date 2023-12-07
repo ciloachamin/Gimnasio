@@ -42,15 +42,19 @@ export const createPlacebyOwner = async (req, res, next) => {
 // Eliminar un lugar (place) por ID
 export const deletePlacebyOwner = async (req, res, next) => {
   try {
-    const placeId = req.params.id;
+    const placeId = req.params.owner_id;
     // Verificar si productId es un número
     if (!/^\d+$/.test(placeId)) {
       return res.status(400).json({ message: "El ID del producto debe ser un número entero válido" });
     }
     const response = await axios.delete(`${url}/place-delete/${placeId}`);
+
+    console.log(response.data);
+
+
     if (response.data === "Invalid pla_id. Please provide a valid integer ID.") {
       return res.status(400).json({ message: "ID no válido. Proporcione un ID entero válido." });
-    } else if (response.data === "Place deleted successfully") {
+    } else if (response.data === "Place and corresponding manage entry deleted successfully") {
       return res.status(200).json({ message: "Lugar eliminado con éxito" });
     } else {
       return res.status(404).json({ message: "Lugar no encontrado" });
