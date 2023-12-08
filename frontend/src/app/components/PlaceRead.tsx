@@ -80,7 +80,7 @@ const ReadPlace: FC = function () {
 
     return (
         <>
-            <PlaceStatus hasPlaces={hasPlaces}></PlaceStatus>
+            <PlaceStatus hasPlaces={hasPlaces} fetchPlaces={fetchPlaces}></PlaceStatus>
             <PlacesList places={places} onDeletePlace={handleDeletePlace} onSelectPlace={handlePlaceSelection} />
         </>
     );

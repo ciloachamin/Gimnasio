@@ -6,7 +6,11 @@ import { useSession } from "next-auth/react";
 
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
-const CreatePlaceModal: FC = function () {
+interface CreatePlaceModalProps {
+    fetchPlace: () => void;
+}
+
+const CreatePlaceModal: FC<CreatePlaceModalProps> = ({ fetchPlace }) => {
     const [isOpen, setOpen] = useState(false);
     const { data: session } = useSession();
 
@@ -43,12 +47,14 @@ const CreatePlaceModal: FC = function () {
 
         const responseAPI = await res.json();
 
-        console.log(responseAPI);   
+        console.log(responseAPI);
 
         if (!res.ok) {
             setErrors([responseAPI.message]); // Cambia a un array para mantener la consistencia
             return;
         }
+        // Llama a la función fetchPlaces para actualizar la lista de lugares
+        fetchPlace();
         setOpen(false);
 
     };

@@ -7,9 +7,10 @@ import Place from "./Place"; // Reemplaza 'tu-libreria-de-componentes' con la li
 
 interface PlaceStatusProps {
     hasPlaces: boolean;
+    fetchPlaces: () => void;
 }
 
-const PlaceStatus: FC<PlaceStatusProps> = ({ hasPlaces}) => {
+const PlaceStatus: FC<PlaceStatusProps> = ({ hasPlaces,fetchPlaces}) => {
     return (
         <div>
             {hasPlaces ? (
@@ -20,7 +21,7 @@ const PlaceStatus: FC<PlaceStatusProps> = ({ hasPlaces}) => {
                             <p className="text-2xl text-gray-400">
                                 Agregar otro lugar
                             </p>
-                            <Place/>
+                            <Place fetchPlace={fetchPlaces} />
                         </div>
                     </Card>
                 </div>
@@ -33,7 +34,7 @@ const PlaceStatus: FC<PlaceStatusProps> = ({ hasPlaces}) => {
                         <p className="text-4xl text-gray-400">
                             No tienes lugares registrados
                         </p>
-                        <Place/>
+                        <Place fetchPlace={fetchPlaces}/>
                     </div>
                 </Card>
             </div>

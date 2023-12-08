@@ -4,7 +4,10 @@ declare module "next-auth" {
 
   interface User {
     id: string;
-    // Otras propiedades según la estructura real de tu objeto user
+    name: string;
+    email: string;
+    lastname: string;
+
   }
 
   interface Session {

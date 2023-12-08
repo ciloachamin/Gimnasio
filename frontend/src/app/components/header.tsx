@@ -100,7 +100,7 @@ const Header: FC<Record<string, never>> = function () {
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">{`${session?.user?.user[2]} ${session?.user?.user[3]}`}</span>
+              <span className="block text-sm">{`${session?.user?.user.name} ${session?.user?.user.lastname}`}</span>
               <span className="block truncate text-sm font-medium">{session?.user?.email}</span>
             </Dropdown.Header>
             <Dropdown.Item  >Dashboard</Dropdown.Item>
