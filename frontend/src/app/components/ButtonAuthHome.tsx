@@ -14,7 +14,7 @@ export default function ButtonAuth() {
         <>
             {session ? (
                 <>
-                    <Link href="/dashboard">
+                    <Link href="/home">
                     <Button className="bg-[#7F9115] fitness-club text-white rounded hover:bg-[#232811]">
                         Ingresar
                     </Button>

@@ -1,14 +1,22 @@
+"use client";
 import { FC, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import PlacesList from './PlacesList';
 import PlaceStatus from './PlaceState';
 
+
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 const ReadPlace: FC = function () {
+
     const { data: session, status } = useSession();
     const [places, setPlaces] = useState([]);
     const idUser = session?.user?.user.id;
+    const handlePlaceSelection = (placeId: number) => {
+        // Usa el router para navegar a otra página con el placeId seleccionado
+        window.location.href = "/";
+
+      };
 
     const fetchPlaces = async () => {
         if (status === "loading" || !session) {
@@ -73,7 +81,7 @@ const ReadPlace: FC = function () {
     return (
         <>
             <PlaceStatus hasPlaces={hasPlaces}></PlaceStatus>
-            <PlacesList places={places} onDeletePlace={handleDeletePlace}/>
+            <PlacesList places={places} onDeletePlace={handleDeletePlace} onSelectPlace={handlePlaceSelection} />
         </>
     );
 };

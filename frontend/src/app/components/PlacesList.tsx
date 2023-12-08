@@ -11,11 +11,16 @@ interface PlaceCardProps {
     pla_type: string;
   };
   onDelete: (id: number) => void; // Función para manejar la eliminación del lugar
+  onSelect: (id: number) => void; // Agrega esta línea
 }
 
-const PlaceCard: FC<PlaceCardProps> = ({ place, onDelete }) => {
+const PlaceCard: FC<PlaceCardProps> = ({ place, onDelete,onSelect }) => {
   const handleDelete = () => {
     onDelete(place.pla_id);
+  };
+
+  const handleSelect = () => {
+    onSelect(place.pla_id);
   };
 
   return (
@@ -30,6 +35,9 @@ const PlaceCard: FC<PlaceCardProps> = ({ place, onDelete }) => {
       <p className="text-gray-500">{place.pla_type}</p>
       <Button color="danger" onClick={handleDelete}>
         Delete
+      </Button>
+      <Button color="primary" onClick={handleSelect}>
+        Select
       </Button>
     </Card>
 
@@ -46,9 +54,10 @@ interface PlacesListProps {
     pla_type: string;
   }>;
   onDeletePlace: (id: number) => void; // Función para manejar la eliminación del lugar
+  onSelectPlace: (id: number) => void; // Agrega esta línea
 }
 
-const PlacesList: FC<PlacesListProps> = ({ places, onDeletePlace }) => {
+const PlacesList: FC<PlacesListProps> = ({ places, onDeletePlace,onSelectPlace}) => {
 
     // Verifica si places es un array y tiene elementos
   if (!Array.isArray(places) || places.length === 0) {
@@ -58,7 +67,7 @@ const PlacesList: FC<PlacesListProps> = ({ places, onDeletePlace }) => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-4">
       {places.map((place) => (
-        <PlaceCard key={place.pla_id} place={place} onDelete={onDeletePlace} />
+            <PlaceCard key={place.pla_id} place={place} onDelete={onDeletePlace} onSelect={onSelectPlace} />
       ))}
     </div>
   );

@@ -64,7 +64,7 @@ const SignUpPage: FC = function () {
       return;
     }
 
-    router.push("/dashboard");
+    router.push("/home");
   };
 
 
