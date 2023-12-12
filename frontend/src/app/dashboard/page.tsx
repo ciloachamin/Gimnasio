@@ -1,6 +1,6 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 const Dashboard = () => {
@@ -23,8 +23,19 @@ const Dashboard = () => {
     setCats(data);
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    window.location.href = "/";
+
+    // Redirige a la página de inicio después de cerrar sesión
+  };
+
+
   return (
     <div>
+      <button onClick={handleSignOut}>
+        sALIR 
+      </button>
       <h1>Dashboard</h1>
       <pre>
         <code>{JSON.stringify(session, null, 2)}</code>

@@ -18,11 +18,10 @@ export const getPlace = async (req, res, next) => {
       const placeId = req.params.id;
       // Verificar si productId es un número
       if (!/^\d+$/.test(placeId)) {
-        return res.status(400).json({ message: "El ID del producto debe ser un número entero válido" });
+        return res.status(400).json({ message: "El ID del lugar debe ser un número entero válido" });
       }
       const response = await axios.get(`${url}/place/${placeId}`);
       const place = response.data;
-      console.log(place);
       if (place==="Place not found") {
         return res.status(404).json({ message: "Lugar no encontrado" });
       }

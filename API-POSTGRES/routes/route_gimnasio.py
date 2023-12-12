@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from fastapi import Response
+from fastapi import Response,Query
 import config.db as db
 from fastapi import HTTPException
 
@@ -11,8 +11,37 @@ Routine)
 
 # Crea un enrutador para las rutas
 route_gimnasio = APIRouter()
+@route_gimnasio.get('/search-members/{pla_id}')
+def get_member_by_place(pla_id):
+    try:
+        # Realiza la consulta para obtener información del miembro en ese lugar
+        cur = db.connection.cursor()
+        cur.execute(
+            'SELECT * FROM public.member WHERE pla_id = %(pla_id)s ORDER BY mem_id ASC',
+            {"pla_id": pla_id}
+        )
+        result = cur.fetchall()
 
+        # Verifica si el miembro en ese lugar existe
+        if not result:
+            return "Member not found in the specified place"
 
+        # Construye la respuesta con la información del miembro
+        member_info = [{"mem_id": row[0], "pla_id": row[1],"mem_name": row[2],"mem_lastname": row[3],"mem_code": row[4],"mem_phone": row[5], "mem_email": row[6], "mem_location": row[7],"mem_password": row[8]} for row in result]
+
+        return member_info
+    except ValueError:
+        return "Invalid pla_id or mem_id. Please provide valid integer IDs."
+    except Exception as e:
+        # En caso de error, revertir la transacción
+        db.connection.rollback()
+        # Puedes registrar el error para depuración
+        print("Error creating details:", str(e))
+        # Lanzar una excepción HTTP para informar del error al cliente
+        raise HTTPException(status_code=500, detail="Error creating details")
+
+        
+        
 @route_gimnasio.get('/places-by-owner/{own_id}')
 def get_places_by_owner(own_id):
     try:
@@ -883,10 +912,13 @@ def get_place(pla_id):
         cur = db.connection.cursor()
         cur.execute('SELECT * FROM PLACE WHERE pla_id = %(pla_id)s', {"pla_id": pla_id})
         result = cur.fetchall()
-
         if not result:
             return "Place not found"
-        return result
+      
+
+        places_info = [{"pla_id": row[0], "pla_name": row[1], "pla_location": row[2], "pla_schedule": row[3], "pla_classschedule": row[4], "pla_type": row[5]} for row in result]
+
+        return places_info
     except ValueError:
         return "Invalid pla_id. Please provide a valid integer ID."
     except Exception as e:

@@ -14,6 +14,7 @@ export const getPlaceByOwner = async (req, res, next) => {
       }
       const response = await axios.get(`${url}/places-by-owner/${ownerId}`);
       const place = response.data;
+      console.log(place);
       if (place === "Places not found for the specified owner") {
         return res.status(200).json({ message: "Lugares no encontrado" });
       }
@@ -59,6 +60,53 @@ export const deletePlacebyOwner = async (req, res, next) => {
     } else {
       return res.status(404).json({ message: "Lugar no encontrado" });
     }
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const searchMember = async (req, res, next) => {
+  try {
+    const pla_id = req.params.place_id;
+    const searchTerm = req.query.q;
+
+    // Realizar la búsqueda en tu base de datos o servicio de datos
+    // Reemplaza esta línea con la lógica de búsqueda específica de tu aplicación
+    const response = await axios.get(`${url}/search-members/${pla_id}`);
+
+    const members = response.data;
+    console.log("members");
+    console.log(members);
+
+    if (members.length === 0) {
+      return res.json({ message: "No se encontraron miembros para el término de búsqueda proporcionado" });
+    }
+    if (members === "Member not found in the specified place") {
+      return res.json([]);
+    }
+
+
+    // Filtrar miembros que coinciden con la palabra clave en id, name, correo o code
+    const results = members.filter((member) => {
+      // Verificar si member es un objeto válido antes de acceder a sus propiedades
+      if (member && typeof member === 'object') {
+        console.log(member.mem_id);
+        
+        return (
+          member.mem_id.toString().includes(searchTerm) ||
+          member.mem_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          member.mem_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          member.mem_code.toString().includes(searchTerm)
+        );
+      }
+      return false; // No es un objeto válido, no se incluirá en los resultados
+    });
+
+    if (results.length === 0) {
+      return res.json([]);
+    }
+
+    return res.status(200).json(results);
   } catch (error) {
     return next(error);
   }

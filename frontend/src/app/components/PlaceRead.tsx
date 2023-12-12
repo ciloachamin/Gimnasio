@@ -3,20 +3,24 @@ import { FC, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import PlacesList from './PlacesList';
 import PlaceStatus from './PlaceState';
+import { useRouter } from "next/navigation";
 
 
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 const ReadPlace: FC = function () {
 
+    const router = useRouter();
+
     const { data: session, status } = useSession();
     const [places, setPlaces] = useState([]);
     const idUser = session?.user?.user.id;
-    const handlePlaceSelection = (placeId: number) => {
-        // Usa el router para navegar a otra página con el placeId seleccionado
-        window.location.href = "/";
 
-      };
+
+    const handlePlaceSelection = (places:Object) => {
+        router.push(`/admin/${places}`);
+        console.log(places)
+    };
 
     const fetchPlaces = async () => {
         if (status === "loading" || !session) {
