@@ -8,13 +8,32 @@ const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 const AutocompleteItem = ({ mem_id, mem_name, mem_lastname, mem_code, ...otherProps }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [membershipState, setMembershipState] = useState(null);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = async () => {
+    const membershipState = await fetchMembershipState(mem_id);
+    setMembershipState(membershipState);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+
+  const fetchMembershipState = async (mem_id) => {
+    try {
+      const mbsReq = await fetch(`${backendUrl}/membership-state/${mem_id}`);
+      if (mbsReq.ok) {
+        return await mbsReq.json();
+      } else {
+        console.error(`Error fetching membership state: ${mbsReq.status} - ${mbsReq.statusText}`);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching membership state:', error);
+      return null;
+    }
   };
 
   return (
@@ -26,8 +45,7 @@ const AutocompleteItem = ({ mem_id, mem_name, mem_lastname, mem_code, ...otherPr
         </div>
       </li>
       {isModalOpen && (
-        <Modal onClose={handleCloseModal} mem_id={mem_id} mem_name={mem_name} mem_lastname={mem_lastname} mem_code={mem_code} />
-      )}
+   <Modal onClose={handleCloseModal} mem_id={mem_id} mem_name={mem_name} mem_lastname={mem_lastname} mem_code={mem_code} membershipState={membershipState} />      )}
     </>
   );
 };

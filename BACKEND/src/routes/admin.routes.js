@@ -4,6 +4,7 @@ import {
   createPlacebyOwner,
   deletePlacebyOwner,
   searchMember,
+  membershipState,
 } from "../controllers/admin.controllers.js";
 
 import { isAuth } from "../middlewares/auth.middleware.js";
@@ -18,5 +19,7 @@ router.post("/places/:owner_id", createPlacebyOwner);
 router.delete("/places/:owner_id", deletePlacebyOwner);
 
 router.get("/search/:place_id", searchMember);
+router.get("/membership-state/:mem_id", membershipState);
+
 
 export default router;

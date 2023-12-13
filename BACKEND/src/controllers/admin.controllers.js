@@ -111,3 +111,19 @@ export const searchMember = async (req, res, next) => {
     return next(error);
   }
 };
+
+
+export const membershipState = async (req, res, next) => {
+  try {
+    const mem_id = req.params.mem_id;
+    const response = await axios.get(`${url}/membership-state/${mem_id}`);
+    const member = response.data;
+    if (member === "Member not found") {
+      return res.status(200).json(null);
+    }
+
+    return res.status(200).json(member);
+  } catch (error) {
+    return next(error);
+  }
+};

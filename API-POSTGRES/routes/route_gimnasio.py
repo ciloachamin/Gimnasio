@@ -11,6 +11,36 @@ Routine)
 
 # Crea un enrutador para las rutas
 route_gimnasio = APIRouter()
+
+
+@route_gimnasio.get('/membership-state/{mem_id}')
+def get_membership_state(mem_id):
+    try:
+        mem_id = int(mem_id)
+        cur = db.connection.cursor()
+        cur.execute('SELECT mbs_state FROM membership WHERE mem_id = %(mem_id)s', {"mem_id": mem_id})
+        result = cur.fetchone()
+
+        if not result:
+            return "Member not found"
+
+        mem_state = result[0]
+        return  mem_state
+
+    except ValueError:
+        return "Invalid mem_id. Please provide a valid integer ID."
+    except Exception as e:
+        # En caso de error, revertir la transacción
+        db.connection.rollback()
+        # Puedes registrar el error para depuración
+        print("Error creating details:", str(e))
+        # Lanzar una excepción HTTP para informar del error al cliente
+        raise HTTPException(status_code=500, detail="Error creating details")
+
+
+
+
+
 @route_gimnasio.get('/search-members/{pla_id}')
 def get_member_by_place(pla_id):
     try:
