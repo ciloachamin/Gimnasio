@@ -6,7 +6,7 @@ class Attendance(BaseModel):
     pla_id: int
     mem_id: int
     att_entry: str
-    att_exit: str
+    att_exit: Optional[str] = None
 
 class Details(BaseModel):
     det_id: Optional[int] = None
@@ -56,6 +56,7 @@ class Membership(BaseModel):
     mbs_id: Optional[int] = None
     rou_id: Optional[int] = None
     mem_id: int
+    pro_id: int
     mbs_start_date: str
     mbs_due_date: str
     mbs_state: Optional[bool] = None

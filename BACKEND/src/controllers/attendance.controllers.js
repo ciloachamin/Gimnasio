@@ -35,6 +35,10 @@ export const getAttendanceById = async (req, res, next) => {
 
 // Crear un nuevo registro de asistencia
 export const createAttendance = async (req, res, next) => {
+
+  console.log("AAAAAAAAAAAAAAAAAAAAAAA");  
+  console.log(req.body);
+
   try {
     const response = await axios.post(`${url}/attendance`, req.body);
     return res.json("Registro de asistencia creado con éxito");

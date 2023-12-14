@@ -103,7 +103,7 @@ async function fetchMembersAndFilterByEmail(email) {
   export const signin = async (req, res) => {
     const userData = req.body;
     const result = await checkIfUserExists(userData.email);
-  
+
     if (!result || result.length === 0) {
       return res.status(400).json({
         message: "El correo no está registrado",

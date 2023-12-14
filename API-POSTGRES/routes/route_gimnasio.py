@@ -13,6 +13,80 @@ Routine)
 route_gimnasio = APIRouter()
 
 
+@route_gimnasio.get('/member-info/{mem_id}')
+def get_attendance_by_member_id(mem_id):
+    try:
+        # Convertir mem_id a entero
+        mem_id = int(mem_id)
+        cur = db.connection.cursor()
+
+        # Realizar la consulta utilizando el cursor
+        cur.execute('''
+            SELECT
+                M.MEM_ID,
+                M.MEM_NAME,
+                M.MEM_LASTNAME,
+                M.MEM_CODE,
+                M.MEM_PHONE,
+                M.MEM_EMAIL,
+                M.MEM_LOCATION,
+                M.MEM_PASSWORD,
+                R.RES_DATE AS LAST_RESERVATION_DATE,
+                R.RES_STATE AS RESERVATION_STATE,
+                R.RES_HOUR AS RESERVATION_HOUR,
+                MS.MBS_ID,
+                MS.MBS_STATE AS MEMBERSHIP_STATE,
+                MS.MBS_START_DATE,
+                MS.MBS_DUE_DATE,
+                P.PRO_NAME AS MEMBERSHIP_NAME
+            FROM
+                MEMBER M
+            LEFT JOIN (
+                SELECT
+                    MEM_ID,
+                    RES_DATE,
+                    RES_STATE,
+                    RES_HOUR
+                FROM (
+                    SELECT
+                        MEM_ID,
+                        RES_DATE,
+                        RES_STATE,
+                        RES_HOUR,
+                        ROW_NUMBER() OVER (PARTITION BY MEM_ID ORDER BY RES_DATE DESC) AS rn
+                    FROM
+                        RESERVATION
+                ) ranked
+                WHERE
+                    rn = 1
+            ) R ON M.MEM_ID = R.MEM_ID
+            LEFT JOIN MEMBERSHIP MS ON R.MEM_ID = MS.MEM_ID AND R.RES_DATE BETWEEN MS.MBS_START_DATE AND MS.MBS_DUE_DATE
+            LEFT JOIN PRODUCT P ON MS.PRO_ID = P.PRO_ID
+            WHERE
+                M.MEM_ID = %(mem_id)s
+        ''', {"mem_id": mem_id})
+
+        result = cur.fetchall()
+
+        if not result:
+            return ({"message": f"No data found for member with MEM_ID={mem_id}"}), 404
+
+        # Convertir los resultados en una lista de diccionarios
+        columns = [desc[0] for desc in cur.description]
+        result_list = [dict(zip(columns, row)) for row in result]
+        result_info = result_list[0]
+
+        return result_info
+    except ValueError:
+        return ({"message": "Invalid mem_id. Please provide a valid integer ID."}), 400
+    except Exception as e:
+        # Puedes registrar el error para depuración
+        print("Error fetching data:", str(e))
+        # Lanzar una excepción HTTP para informar del error al cliente
+        raise HTTPException(status_code=500, detail="Error fetching data")
+    finally:
+        cur.close()
+
 @route_gimnasio.get('/membership-state/{mem_id}')
 def get_membership_state(mem_id):
     try:
@@ -96,6 +170,31 @@ def get_places_by_owner(own_id):
         return "An error occurred"
 
 
+@route_gimnasio.get('/attendance-member/{mem_id}')
+def get_attendance_by_member_id(mem_id):
+    try:
+        mem_id = int(mem_id)
+        cur = db.connection.cursor()
+        cur.execute('SELECT * FROM ATTENDANCE WHERE mem_id = %(mem_id)s', {"mem_id": mem_id})
+        result = cur.fetchall()
+
+        if not result:
+            return "Attendance not found for member with mem_id={}".format(mem_id)
+
+        # Convertir los resultados en una lista de diccionarios con nombres de columnas
+        columns = [desc[0] for desc in cur.description]
+        result_list = [dict(zip(columns, row)) for row in result]
+
+        return (result_list)
+    except ValueError:
+        return "Invalid mem_id. Please provide a valid integer ID."
+    except Exception as e:
+        # En caso de error, revertir la transacción
+        db.connection.rollback()
+        # Puedes registrar el error para depuración
+        print("Error creating attendance:", str(e))
+        # Lanzar una excepción HTTP para informar del error al cliente
+        raise HTTPException(status_code=500, detail="Error creating attendance")
 
 # Rutas para la tabla ATTENDANCE
 @route_gimnasio.get('/attendance')
@@ -111,16 +210,25 @@ def get_attendance_by_id(att_id):
         att_id = int(att_id)
         cur = db.connection.cursor()
         cur.execute('SELECT * FROM ATTENDANCE WHERE att_id = %(att_id)s', {"att_id": att_id})
-        result = cur.fetchall()
+        result = cur.fetchone()
 
         if not result:
             return "Attendance not found"
-        return result
+
+        columns = [desc[0] for desc in cur.description]
+        result_dict = dict(zip(columns, result))
+
+        return result_dict
     except ValueError:
         return "Invalid att_id. Please provide a valid integer ID."
     except Exception as e:
-        print("Error:", str(e))
-        return "An error occurred"
+        # En caso de error, revertir la transacción
+        db.connection.rollback()
+        # Puedes registrar el error para depuración
+        print("Error creating attendance:", str(e))
+        # Lanzar una excepción HTTP para informar del error al cliente
+        raise HTTPException(status_code=500, detail="Error creating attendance")
+
 
 @route_gimnasio.post('/attendance')
 def create_attendance(att: Attendance):
@@ -771,19 +879,20 @@ def get_membership(mbs_id: int):
     except Exception as e:
         print("Error:", str(e))
         return "An error occurred"
-
+    
 @route_gimnasio.post('/membership')
 def create_membership(membership: Membership):
     new_membership = {
         "rou_id": membership.rou_id,
         "mem_id": membership.mem_id,
-        "mbs_star_date": membership.mbs_star_date,
+        "pro_id": membership.pro_id,
+        "mbs_start_date": membership.mbs_start_date,
         "mbs_due_date": membership.mbs_due_date,
         "mbs_state": membership.mbs_state
     }
     cur = db.connection.cursor()
     try:
-        cur.execute('INSERT INTO MEMBERSHIP (rou_id, mem_id, mbs_star_date, mbs_due_date, mbs_state) VALUES (%(rou_id)s, %(mem_id)s, %(mbs_star_date)s, %(mbs_due_date)s, %(mbs_state)s)', new_membership)
+        cur.execute('INSERT INTO MEMBERSHIP (rou_id, mem_id, pro_id, mbs_start_date, mbs_due_date, mbs_state) VALUES (%(rou_id)s, %(mem_id)s, %(pro_id)s, %(mbs_start_date)s, %(mbs_due_date)s, %(mbs_state)s)', new_membership)
         db.connection.commit()
         return "Membership created successfully"
     except Exception as e:
@@ -798,8 +907,8 @@ def create_membership(membership: Membership):
 def update_membership(mbs_id: int, updated_membership: Membership):
     cur = db.connection.cursor()
     try:
-        cur.execute('UPDATE MEMBERSHIP SET rou_id=%(new_rou_id)s, mem_id=%(new_mem_id)s, mbs_star_date=%(new_mbs_star_date)s, mbs_due_date=%(new_mbs_due_date)s, mbs_state=%(new_mbs_state)s WHERE mbs_id=%(mbs_id)s', 
-                    {"new_rou_id": updated_membership.rou_id, "new_mem_id": updated_membership.mem_id, "new_mbs_star_date": updated_membership.mbs_star_date, "new_mbs_due_date": updated_membership.mbs_due_date, "new_mbs_state": updated_membership.mbs_state, "mbs_id": mbs_id})
+        cur.execute('UPDATE MEMBERSHIP SET rou_id=%(new_rou_id)s, mem_id=%(new_mem_id)s, pro_id=%(new_pro_id)s, mbs_start_date=%(new_mbs_star_date)s, mbs_due_date=%(new_mbs_due_date)s, mbs_state=%(new_mbs_state)s WHERE mbs_id=%(mbs_id)s', 
+                    {"new_rou_id": updated_membership.rou_id, "new_mem_id": updated_membership.mem_id, "new_pro_id": updated_membership.pro_id, "new_mbs_star_date": updated_membership.mbs_star_date, "new_mbs_due_date": updated_membership.mbs_due_date, "new_mbs_state": updated_membership.mbs_state, "mbs_id": mbs_id})
         db.connection.commit()
 
         # Obtiene el número de filas afectadas por la operación de actualización
@@ -816,6 +925,7 @@ def update_membership(mbs_id: int, updated_membership: Membership):
         print("Error updating membership:", str(e))
         # Lanzar una excepción HTTP para informar del error al cliente
         raise HTTPException(status_code=500, detail="Error updating membership")
+
 
 @route_gimnasio.delete('/membership/{mbs_id}')
 def delete_membership(mbs_id: int):

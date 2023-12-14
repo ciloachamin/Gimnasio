@@ -2,19 +2,58 @@ import { useMemo, useRef, useState } from 'react'
 import { createAutocomplete } from '@algolia/autocomplete-core'
 import Link from 'next/link'
 import Modal from '@/app/components/UserModal'
-
+import { useSession } from "next-auth/react";
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 
 const AutocompleteItem = ({ mem_id, mem_name, mem_lastname, mem_code, ...otherProps }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [membershipState, setMembershipState] = useState(null);
+  const { data: session } = useSession();
+
 
   const handleOpenModal = async () => {
     const membershipState = await fetchMembershipState(mem_id);
     setMembershipState(membershipState);
     setIsModalOpen(true);
+    // Guardar el registro de asistencia cuando se abre el modal
+    guardarRegistroAsistencia(mem_id);
   };
+
+
+  const guardarRegistroAsistencia = async (mem_id) => {
+    const fechaActual = new Date();
+    console.log("fechaActual"); 
+    console.log(fechaActual);
+    const fechaFormateada = fechaActual.toISOString().slice(0, 19).replace("T", " ");
+    console.log("fechaFormateada");
+    console.log(fechaFormateada);
+    try {
+      const respuesta = await fetch(`${backendUrl}/attendance`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${session?.user?.token}`,
+        },
+        body: JSON.stringify({
+          att_id: 1,
+          pla_id: otherProps.pla_id,
+          mem_id: mem_id,
+          att_entry: fechaActual,
+          att_exit: null,
+
+        }),
+      }
+      );
+
+      if (!respuesta.ok) {
+        console.error(`Error al guardar el registro de asistencia: ${respuesta.status} - ${respuesta.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error al guardar el registro de asistencia:', error);
+    }
+  };
+
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -45,7 +84,7 @@ const AutocompleteItem = ({ mem_id, mem_name, mem_lastname, mem_code, ...otherPr
         </div>
       </li>
       {isModalOpen && (
-   <Modal onClose={handleCloseModal} mem_id={mem_id} mem_name={mem_name} mem_lastname={mem_lastname} mem_code={mem_code} membershipState={membershipState} />      )}
+        <Modal onClose={handleCloseModal} mem_id={mem_id} mem_name={mem_name} mem_lastname={mem_lastname} mem_code={mem_code} membershipState={membershipState} />)}
     </>
   );
 };
@@ -62,7 +101,7 @@ export default function Search(props) {
     onStateChange: ({ state }) => setAutocompleteState(state),
     getSources: () => [{
       sourceId: 'offers-next-api',
-      getItems: ({ query}) => {
+      getItems: ({ query }) => {
         if (!!query) {
           return fetch(`${backendUrl}/search/${props.pla_id}?q=${query}`)
             .then(res => res.json())
@@ -88,7 +127,7 @@ export default function Search(props) {
   return (
 
     <>
-     <form
+      <form
         ref={formRef}
         className="lg:block lg:pl-3.5 max-lg:w-[400px] max-sm:w-auto"
         {...formProps}
@@ -117,27 +156,27 @@ export default function Search(props) {
             className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
           />
           {
-          autocompleteState.isOpen && (
-            <div className="absolute mt-12 top-0 left-0 border w-full border-gray-100 bg-white overflow-hidden rounded-lg shadow-lg z-10" ref={panelRef} {...autocomplete.getPanelProps()}>
-              {autocompleteState.collections.map((collection, index) => {
-                const { items } = collection
-                console.log({ items })
-                return (
-                  <section key={`section-${index}`}  >
-                    {items.length > 0 && (
-                      <ul {...autocomplete.getListProps()}>
-                        {items.map(item => (
-                          <AutocompleteItem key={item.mem_id} {...item} />
-                        ))}
+            autocompleteState.isOpen && (
+              <div className="absolute mt-12 top-0 left-0 border w-full border-gray-100 bg-white overflow-hidden rounded-lg shadow-lg z-10" ref={panelRef} {...autocomplete.getPanelProps()}>
+                {autocompleteState.collections.map((collection, index) => {
+                  const { items } = collection
+                  console.log({ items })
+                  return (
+                    <section key={`section-${index}`}  >
+                      {items.length > 0 && (
+                        <ul {...autocomplete.getListProps()}>
+                          {items.map(item => (
+                            <AutocompleteItem key={item.mem_id} {...item} />
+                          ))}
 
-                      </ul>
-                    )}
-                  </section>
-                )
-              })}
-            </div>
-          )
-        }
+                        </ul>
+                      )}
+                    </section>
+                  )
+                })}
+              </div>
+            )
+          }
 
         </div>
       </form>

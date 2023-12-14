@@ -1,9 +1,13 @@
 import { FC, useState,useEffect } from 'react';
 import { Button, Modal } from 'flowbite-react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FaInfoCircle } from 'react-icons/fa';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+
+
+
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 
@@ -35,7 +39,7 @@ const UserModal: FC<ModalProps> = ({
       ? 'No hay Membrecia' // Valor predeterminado cuando membershipState es nulo
       : 'Membrecia Inactiva'
   );
-  
+  const router = useRouter();
   const [buttonColor, setButtonColor] = useState(
     membershipState
       ? 'bg-green-500 hover:bg-green-600 w-[170px]'
@@ -59,8 +63,10 @@ const UserModal: FC<ModalProps> = ({
 
   const handleButtonClick = () => {
     if (membershipState) {
+      router.push(`/profile/${mem_id}`);
       console.log('Redirigir a la página de perfil');
     } else {
+      router.push('/home');
       console.log('Redirigir a la página de renovación');
     }
   };

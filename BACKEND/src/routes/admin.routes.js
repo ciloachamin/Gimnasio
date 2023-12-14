@@ -5,6 +5,8 @@ import {
   deletePlacebyOwner,
   searchMember,
   membershipState,
+  attendanceMember,
+  memberInfo,
 } from "../controllers/admin.controllers.js";
 
 import { isAuth } from "../middlewares/auth.middleware.js";
@@ -20,6 +22,10 @@ router.delete("/places/:owner_id", deletePlacebyOwner);
 
 router.get("/search/:place_id", searchMember);
 router.get("/membership-state/:mem_id", membershipState);
+router.get("/attendance-member/:mem_id", attendanceMember);
+
+router.get("/member-info/:mem_id", memberInfo);
+
 
 
 export default router;

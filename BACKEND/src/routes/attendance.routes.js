@@ -15,7 +15,7 @@ const router = Router();
 
 router.get("/attendance", isAuth, getAttendance);
 router.get("/attendance/:att_id", isAuth, getAttendanceById);
-router.post("/attendance", isAuth,validateSchema(attendanceSchema), createAttendance);
+router.post("/attendance", isAuth, createAttendance);
 router.put("/attendance/:att_id", isAuth, updateAttendance);
 router.delete("/attendance/:att_id", isAuth, deleteAttendance);
 
