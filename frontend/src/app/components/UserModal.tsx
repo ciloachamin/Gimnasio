@@ -104,7 +104,7 @@ const UserModal: FC<ModalProps> = ({
                   src="/assets/img/community/img1.png"
                   width="112"
                 />
-                <div>
+                <Link href={`/profile/${mem_id}`}>
                   <h3 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">
                     {`${mem_name} ${mem_lastname}`}
                   </h3>
@@ -118,7 +118,7 @@ const UserModal: FC<ModalProps> = ({
                     <span className="font-bold">Codigo:</span> {`${mem_code}`}
                   </div>
 
-                </div>
+                </Link>
                 <div className="flex items-center space-x-4">
                     <Button
                       className={buttonColor}

@@ -183,14 +183,16 @@ function ActualSidebar(): JSX.Element {
 function HomePage(): JSX.Element {
     const params = useParams();
     const id = params['id'];
+    const { place } = useFetchPlace();
     console.log(id);
+    
     return (
         <div className="p-6">
             <section>
                 <header>
 
                 </header>
-                <Profile id={id}></Profile>
+                <Profile id={id} place={place?.pla_id}></Profile>
             </section>
         </div>
 
