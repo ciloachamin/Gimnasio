@@ -16,7 +16,8 @@ import { SiContactlesspayment } from "react-icons/si";
 import { MdContactless } from "react-icons/md";
 import UserEditModal from '@/app/components/UserEdit'
 import { TfiReload } from "react-icons/tfi";
-
+import UserNFCModal from '../components/UserNFC';
+import { User } from 'user-edit';
 
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
@@ -144,7 +145,6 @@ const Profile: React.FC<ProfileProps> = ({ id, place }) => {
                     <ul className=''>
                       <li>
                         <div className="inline-flex items-center w-full">
-
                           <UserEditModal user={memberInfo} place={place} />
                         </div>
                       </li>
@@ -165,8 +165,7 @@ const Profile: React.FC<ProfileProps> = ({ id, place }) => {
                         </div>
                       </li>                      <li>
                         <div className="inline-flex items-center w-full">
-                          <a href="#" className="w-full px-3 py-2 my-1 mx-3 text-md font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 flex justify-start gap-6 items-center">
-                            <MdContactless size={25} />NFC</a>
+                            <UserNFCModal user={memberInfo} place={place} />
                         </div>
                       </li>                      <li>
                         <div className="inline-flex items-center w-full">
