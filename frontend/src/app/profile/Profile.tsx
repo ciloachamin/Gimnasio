@@ -18,6 +18,7 @@ import UserEditModal from '@/app/components/UserEdit'
 import { TfiReload } from "react-icons/tfi";
 import UserNFCModal from '../components/UserNFC';
 import { User } from 'user-edit';
+import { MemberInfo } from 'member-info';
 
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
@@ -30,7 +31,7 @@ interface ProfileProps {
 const Profile: React.FC<ProfileProps> = ({ id, place }) => {
   const { data: session, status } = useSession();
   const [attendance, setAttendance] = useState([]);
-  const [memberInfo, setMemberInfo] = useState([]);
+  const [memberInfo, setMemberInfo] = useState({} as MemberInfo);
 
 
   const fetchPlaces = async () => {

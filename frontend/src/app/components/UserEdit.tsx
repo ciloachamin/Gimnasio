@@ -5,11 +5,12 @@ import { HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
 import { IoFingerPrint, IoSpeedometerOutline } from "react-icons/io5";
 import { FaUserEdit } from "react-icons/fa";
 import { User } from 'user-edit';
+import { MemberInfo } from 'member-info';
 import { useSession } from 'next-auth/react';
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 interface ModalProps {
-    user: User;
+    user: MemberInfo;
     place: number | number[] | undefined
 }
 
@@ -23,7 +24,7 @@ const EditUserModal: FC<ModalProps> = ({ user, place }) => {
     const [userNewPassword, setUserNewPassword] = useState<string>('');
     const [userCode, setUserCode] = useState<string>('');
     const [userPhone, setUserPhone] = useState<string>('');
-    const [userMembershipstate, setUserMembershipstate] = useState<string>('');
+    const [userMembershipstate, setUserMembershipstate] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [errors, setErrors] = useState<string[]>([]);

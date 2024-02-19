@@ -14,7 +14,7 @@ route_gimnasio = APIRouter()
 
 
 @route_gimnasio.get('/member-info/{mem_id}')
-def get_attendance_by_member_id(mem_id):
+def get_member_info(mem_id):
     try:
         # Convertir mem_id a entero
         mem_id = int(mem_id)
@@ -22,61 +22,53 @@ def get_attendance_by_member_id(mem_id):
 
         # Realizar la consulta utilizando el cursor
         cur.execute('''
-            SELECT
-                M.MEM_ID,
-                M.MEM_NAME,
-                M.MEM_LASTNAME,
-                M.MEM_CODE,
-                M.MEM_PHONE,
-                M.MEM_EMAIL,
-                M.MEM_LOCATION,
-                M.MEM_PASSWORD,
-                R.RES_DATE AS LAST_RESERVATION_DATE,
-                R.RES_STATE AS RESERVATION_STATE,
-                R.RES_HOUR AS RESERVATION_HOUR,
-                MS.MBS_ID,
-                MS.MBS_STATE AS MEMBERSHIP_STATE,
-                MS.MBS_START_DATE,
-                MS.MBS_DUE_DATE,
-                P.PRO_NAME AS MEMBERSHIP_NAME
-            FROM
-                MEMBER M
-            LEFT JOIN (
-                SELECT
-                    MEM_ID,
-                    RES_DATE,
-                    RES_STATE,
-                    RES_HOUR
-                FROM (
-                    SELECT
-                        MEM_ID,
-                        RES_DATE,
-                        RES_STATE,
-                        RES_HOUR,
-                        ROW_NUMBER() OVER (PARTITION BY MEM_ID ORDER BY RES_DATE DESC) AS rn
-                    FROM
-                        RESERVATION
-                ) ranked
-                WHERE
-                    rn = 1
-            ) R ON M.MEM_ID = R.MEM_ID
-            LEFT JOIN MEMBERSHIP MS ON R.MEM_ID = MS.MEM_ID AND R.RES_DATE BETWEEN MS.MBS_START_DATE AND MS.MBS_DUE_DATE
-            LEFT JOIN PRODUCT P ON MS.PRO_ID = P.PRO_ID
-            WHERE
-                M.MEM_ID = %(mem_id)s
+            SELECT 
+                m.*, 
+                p.*, 
+                mbs.*, 
+                res.*
+            FROM 
+                member m
+            LEFT JOIN 
+                (
+                    SELECT 
+                        *
+                    FROM 
+                        membership
+                    WHERE 
+                        mem_id = %(mem_id)s
+                    ORDER BY 
+                        mbs_id DESC
+                    LIMIT 1
+                ) mbs ON m.mem_id = mbs.mem_id
+            LEFT JOIN 
+                product p ON mbs.pro_id = p.pro_id
+            LEFT JOIN 
+                (
+                    SELECT 
+                        *
+                    FROM 
+                        reservation
+                    WHERE 
+                        mem_id = %(mem_id)s
+                    ORDER BY 
+                        res_id DESC
+                    LIMIT 1
+                ) res ON m.mem_id = res.mem_id
+            WHERE 
+                m.mem_id = %(mem_id)s
         ''', {"mem_id": mem_id})
 
         result = cur.fetchall()
 
         if not result:
-            return ({"message": f"No data found for member with MEM_ID={mem_id}"}), 404
+            return ({"message": f"No data found for member with mem_id={mem_id}"}), 404
 
-        # Convertir los resultados en una lista de diccionarios
+        # Convertir los resultados en un diccionario
         columns = [desc[0] for desc in cur.description]
-        result_list = [dict(zip(columns, row)) for row in result]
-        result_info = result_list[0]
+        result_dict = [dict(zip(columns, row)) for row in result]
 
-        return result_info
+        return result_dict[0]  # Solo retornamos el primer resultado ya que solo debería haber uno
     except ValueError:
         return ({"message": "Invalid mem_id. Please provide a valid integer ID."}), 400
     except Exception as e:
@@ -111,7 +103,76 @@ def get_membership_state(mem_id):
         # Lanzar una excepción HTTP para informar del error al cliente
         raise HTTPException(status_code=500, detail="Error creating details")
 
+@route_gimnasio.get('/membership-last/{mem_id}')
+def get_membership_state(mem_id):
+    try:
+        mem_id = int(mem_id)
+        cur = db.connection.cursor()
+        cur.execute('''
+            SELECT * 
+            FROM membership 
+            WHERE mem_id = %(mem_id)s 
+            ORDER BY mbs_id DESC 
+            LIMIT 1''', {"mem_id": mem_id})
+        result = cur.fetchone()
 
+        if not result:
+            return "Member not found"
+        
+        columns = [desc[0] for desc in cur.description]
+        result_dict = dict(zip(columns, result))
+        
+        return result_dict
+
+    except ValueError:
+        return "Invalid mem_id. Please provide a valid integer ID."
+    except Exception as e:
+        # En caso de error, revertir la transacción
+        db.connection.rollback()
+        # Puedes registrar el error para depuración
+        print("Error getting membership state:", str(e))
+        # Lanzar una excepción HTTP para informar del error al cliente
+        raise HTTPException(status_code=500, detail="Error getting membership state")
+
+@route_gimnasio.get('/membership-by-member/{mem_id}')
+def get_membership_state(mem_id):
+    try:
+        mem_id = int(mem_id)
+        cur = db.connection.cursor()
+        cur.execute('''
+            SELECT 
+                MS.*, 
+                P.*
+            FROM 
+                MEMBERSHIP MS
+            LEFT JOIN 
+                PRODUCT P ON MS.PRO_ID = P.PRO_ID
+            WHERE 
+                MS.MEM_ID = %(mem_id)s 
+            ORDER BY 
+                MS.MBS_ID DESC
+        ''', {"mem_id": mem_id})
+        result = cur.fetchall()
+
+        if not result:
+            return "Member not found"
+        
+        columns = [desc[0] for desc in cur.description]
+        result_dicts = []
+        for row in result:
+            result_dicts.append(dict(zip(columns, row)))
+        
+        return result_dicts
+
+    except ValueError:
+        return "Invalid mem_id. Please provide a valid integer ID."
+    except Exception as e:
+        # En caso de error, revertir la transacción
+        db.connection.rollback()
+        # Puedes registrar el error para depuración
+        print("Error getting membership state:", str(e))
+        # Lanzar una excepción HTTP para informar del error al cliente
+        raise HTTPException(status_code=500, detail="Error getting membership state")
 
 
 

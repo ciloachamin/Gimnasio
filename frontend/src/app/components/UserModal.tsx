@@ -50,7 +50,7 @@ const UserModal: FC<ModalProps> = ({
   
   const handleMouseEnter = () => {
     if (membershipState) {
-      setButtonText('Ver Perfil');
+      setButtonText('Ver Membrecia');
       setButtonColor('bg-blue-500 w-[170px] hover:bg-blue-600');
     } else {
       setButtonText('Renovar');
@@ -63,10 +63,10 @@ const UserModal: FC<ModalProps> = ({
 
   const handleButtonClick = () => {
     if (membershipState) {
-      router.push(`/profile/${mem_id}`);
+      router.push(`/membership/${mem_id}`);
       console.log('Redirigir a la página de perfil');
     } else {
-      router.push('/home');
+      router.push('/payments');
       console.log('Redirigir a la página de renovación');
     }
   };

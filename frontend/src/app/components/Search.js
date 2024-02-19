@@ -14,7 +14,7 @@ const AutocompleteItem = ({ mem_id, mem_name, mem_lastname, mem_code, ...otherPr
 
   const handleOpenModal = async () => {
     const membershipState = await fetchMembershipState(mem_id);
-    setMembershipState(membershipState);
+    setMembershipState(membershipState?.isMembershipActive);
     setIsModalOpen(true);
     // Guardar el registro de asistencia cuando se abre el modal
     guardarRegistroAsistencia(mem_id);
@@ -23,7 +23,7 @@ const AutocompleteItem = ({ mem_id, mem_name, mem_lastname, mem_code, ...otherPr
 
   const guardarRegistroAsistencia = async (mem_id) => {
     const fechaActual = new Date();
-    console.log("fechaActual"); 
+    console.log("fechaActual");
     console.log(fechaActual);
     const fechaFormateada = fechaActual.toISOString().slice(0, 19).replace("T", " ");
     console.log("fechaFormateada");
@@ -62,7 +62,7 @@ const AutocompleteItem = ({ mem_id, mem_name, mem_lastname, mem_code, ...otherPr
 
   const fetchMembershipState = async (mem_id) => {
     try {
-      const mbsReq = await fetch(`${backendUrl}/membership-state/${mem_id}`);
+      const mbsReq = await fetch(`${backendUrl}/membership-last/${mem_id}`);
       if (mbsReq.ok) {
         return await mbsReq.json();
       } else {

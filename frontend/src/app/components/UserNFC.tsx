@@ -15,11 +15,12 @@ import { MdOutlineDocumentScanner } from "react-icons/md";
 import Scan from './NFC/Scan';
 import Write from './NFC/Write';
 import { ActionsContext } from '../context/context';
+import { MemberInfo } from 'member-info';
 
 const backendUrl = process.env['NEXT_PUBLIC_BACKEND_URL'];
 
 interface ModalProps {
-    user: User;
+    user: MemberInfo;
     place: number | number[] | undefined
 }
 
@@ -122,6 +123,9 @@ const UserNFCModal: FC<ModalProps> = ({ user, place }) => {
                                     ${fullWidthTabs ? ' text-lg' : 'mb-6 text-3xl font-extrabold dark:text-white '}`}>Escribir</code>
                                 </button>
                             </div>
+
+
+
                             <ActionsContext.Provider value={actionsValue}>
                                 {scan && <Scan />}
                                 {write && <Write user={user} />}

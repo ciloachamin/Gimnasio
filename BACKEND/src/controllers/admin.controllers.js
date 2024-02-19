@@ -113,10 +113,37 @@ export const searchMember = async (req, res, next) => {
 };
 
 
-export const membershipState = async (req, res, next) => {
+export const membershipLast = async (req, res, next) => {
   try {
     const mem_id = req.params.mem_id;
-    const response = await axios.get(`${url}/membership-state/${mem_id}`);
+    const response = await axios.get(`${url}/membership-last/${mem_id}`);
+    const member = response.data;
+    
+    if (member === "Member not found") {
+      return res.status(200).json(null);
+    }
+
+    // Obtener la fecha actual en formato ISO (YYYY-MM-DD)
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    // Verificar si la membresía está vigente
+    const isMembershipActive = member.mbs_state && member.mbs_due_date >= currentDate;
+    
+    // Agregar la propiedad que indica si la membresía está activa o no
+    member.isMembershipActive = isMembershipActive;
+
+    console.log("member", member);
+
+    return res.status(200).json(member);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const membershipByMember = async (req, res, next) => {
+  try {
+    const mem_id = req.params.mem_id;
+    const response = await axios.get(`${url}/membership-by-member/${mem_id}`);
     const member = response.data;
     if (member === "Member not found") {
       return res.status(200).json(null);
@@ -127,6 +154,7 @@ export const membershipState = async (req, res, next) => {
     return next(error);
   }
 };
+
 
 
 
@@ -194,20 +222,26 @@ export const memberInfo = async (req, res, next) => {
     if (!memberInfo || memberInfo.length === 0) {
       return res.status(404).json({ message: `No data found for member with MEM_ID=${mem_id}` });
     }
+    console.log("memberInfo", memberInfo);
+    const now = new Date();
+    const dueDate = new Date(memberInfo.mbs_due_date);
+    const isMembershipAvailable = now <= dueDate;
 
     const newUser = {
       ...memberInfo,
-      last_reservation_date: memberInfo.last_reservation_date ? memberInfo.last_reservation_date : "No disponible",
-      reservation_state: memberInfo.reservation_state ? memberInfo.reservation_state : "No disponible",
-      reservation_hour: memberInfo.reservation_hour ? memberInfo.reservation_hour : "No disponible",
+      last_reservation_date: memberInfo.res_date ? memberInfo.res_date : "No disponible",
+      reservation_state: memberInfo.res_state ? memberInfo.res_state : "No disponible",
+      reservation_hour: memberInfo.res_hour ? memberInfo.res_hour : "No disponible",
       mbs_id: memberInfo.mbs_id ? memberInfo.mbs_id : "No disponible",
-      membership_state: memberInfo.membership_state ? memberInfo.membership_state : "No disponible",
+      membership_state: memberInfo.mbs_state ? memberInfo.mbs_state : "No disponible",
       mbs_start_date: memberInfo.mbs_start_date ? memberInfo.mbs_start_date : "No disponible",
       mbs_due_date: memberInfo.mbs_due_date ? memberInfo.mbs_due_date : "No disponible",
-      membership_name: memberInfo.membership_name ? memberInfo.membership_name : "No disponible",
+      membership_name: memberInfo.pro_name ? memberInfo.pro_name : "No disponible",
+      is_membership_available: isMembershipAvailable
 
 
     };
+    console.log("newUser", newUser);
 
     return res.status(200).json(newUser);
   } catch (error) {
